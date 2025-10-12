@@ -1,0 +1,449 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import toast from "react-hot-toast"
+
+// It's good practice to define constants for options
+const GENDER_OPTIONS = ["Female", "Male", "Trans", "Non-binary", "Other"]
+const ORIENTATION_OPTIONS = ["Straight", "Gay", "Bisexual", "Pansexual", "Asexual", "Queer", "Other"]
+const BREAST_SIZE_OPTIONS = ["Small Breasts", "Medium Breast", "Big Natural", "Extra Large", "No Breasts"]
+const BODY_TYPE_OPTIONS = ["Petite", "Average", "Curvy", "Thick", "Plus Size", "Muscular"]
+const SERVES_WHO_OPTIONS = ["Men", "Women", "Both Men and Women", "Queer Only"]
+const ETHNICITY_OPTIONS = [
+  "Black",
+  "White",
+  "Mixed",
+  "Somali",
+  "Arabic",
+  "Hindi",
+  "Other"
+]
+
+// Using process.env is a more common way to access environment variables.
+const API_URL = import.meta.env.VITE_API_URL
+
+
+// SVG icon to replace the dependency on react-icons
+const UserIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="text-primary text-3xl"
+  >
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+    <circle cx="12" cy="7" r="4"></circle>
+  </svg>
+);
+
+
+export default function PersonalInfoCard({ userData, updateUserData }) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [isProfileComplete, setIsProfileComplete] = useState(false)
+  const isSpa = userData?.userType === "spa"
+
+  // Expanded formData state to include all the new fields
+  const [formData, setFormData] = useState({
+    username: userData?.username || "",
+    gender: userData?.gender || "",
+    sexualOrientation: userData?.sexualOrientation || "",
+    age: userData?.age || "",
+    nationality: userData?.nationality || "",
+    serviceType: userData?.serviceType || "",
+    bio: userData?.bio || "",
+    // ADD THESE NEW FIELDS
+    breastSize: userData?.breastSize || "",
+    bodyType: userData?.bodyType || "",
+    servesWho: userData?.servesWho || "",
+    ethnicity: userData?.ethnicity || "",
+  })
+
+  // This useEffect hook checks if the profile is complete whenever userData changes.
+  useEffect(() => {
+    const requiredFields = isSpa ? ["username", "serviceType"] : ["username", "gender", "sexualOrientation", "age", "nationality"];
+    const allFieldsFilled = requiredFields.every(field => userData && userData[field]);
+    setIsProfileComplete(allFieldsFilled)
+
+    setFormData({
+      username: userData?.username || "",
+      gender: userData?.gender || "",
+      sexualOrientation: userData?.sexualOrientation || "",
+      age: userData?.age || "",
+      nationality: userData?.nationality || "",
+      serviceType: userData?.serviceType || "",
+      bio: userData?.bio || "",
+      breastSize: userData?.breastSize || "",
+      bodyType: userData?.bodyType || "",
+      servesWho: userData?.servesWho || "",
+      ethnicity: userData?.ethnicity || "",
+    })
+  }, [userData, isSpa])
+
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  }
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setFormData({
+      username: userData?.username || "",
+      gender: userData?.gender || "",
+      sexualOrientation: userData?.sexualOrientation || "",
+      age: userData?.age || "",
+      nationality: userData?.nationality || "",
+      serviceType: userData?.serviceType || "",
+      bio: userData?.bio || "",
+      // ADD THESE NEW FIELDS
+      breastSize: userData?.breastSize || "",
+      bodyType: userData?.bodyType || "",
+      servesWho: userData?.servesWho || "",
+      ethnicity: userData?.ethnicity || "",
+    });
+  }
+
+  const getBioCharacterCount = () => {
+    return formData.bio ? formData.bio.length : 0;
+  }
+
+  const getBioCharacterColor = () => {
+    const count = getBioCharacterCount();
+    if (count === 0) return "text-text-muted";
+    if (count <= 150) return "text-success";
+    if (count <= 180) return "text-warning";
+    return "text-error";
+  }
+
+  const handleSave = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch(`${API_URL}/user/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to update profile")
+      }
+
+      toast.success("Profile updated successfully!")
+      updateUserData(data.user) // Update parent state with the fresh user data from API
+      setIsEditing(false)
+    } catch (error) {
+      toast.error(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+
+
+  // Helper function to render form fields
+  const renderField = (label, value, isBio = false) => (
+    <div>
+      <label className="block text-sm font-medium text-text-primary mb-2">{label}</label>
+      {value ? (
+        isBio ? (
+          <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-wrap">{value}</p>
+        ) : (
+          <p className="text-green-500 font-bold capitalize">{value}</p>
+        )
+      ) : (
+        <p className="text-text-muted">
+          {isBio ? "No bio added yet" : "Not set"}
+        </p>
+      )}
+    </div>
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      // Conditional border color based on isProfileComplete state
+      className={`bg-bg-secondary border rounded-2xl p-6 transition-colors duration-300 ${isProfileComplete ? 'border-green-500' : 'border-border-light'}`}
+    >
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h3 className="text-xl font-bold text-text-primary mb-1">
+            {isSpa ? "Spa Information" : "Personal Information"}
+          </h3>
+          <p className="text-sm text-text-muted">
+            {isSpa ? "Manage your spa details and service type" : "Manage your personal details and services"}
+          </p>
+        </div>
+        <UserIcon />
+      </div>
+
+      <div className="space-y-4">
+        {isEditing ? (
+          <>
+            {/* Username */}
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">
+                {isSpa ? 'Spa Name' : 'Username'}
+              </label>
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                disabled={loading}
+              />
+            </div>
+
+            {/* Bio/Description */}
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">
+                {isSpa ? 'About the Spa' : 'About Me (Bio)'}
+                <span className="text-text-muted text-xs font-normal ml-1">- This will show on your profile.</span>
+              </label>
+              <textarea
+                name="bio"
+                value={formData.bio}
+                onChange={handleInputChange}
+                placeholder={`${isSpa ? "A preview of your spa. Keep it short and sweet.💋🍭" : "A preview of who you are. Keep it short and sweet.💋🍭"}`}
+                rows={3}
+                maxLength={200}
+                className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                disabled={loading}
+              />
+              <div className="flex justify-between items-center mt-1">
+                <p className="text-xs text-text-muted">
+                  This helps clients get to know you better
+                </p>
+                <p className={`text-xs ${getBioCharacterColor()}`}>
+                  {getBioCharacterCount()}/200
+                </p>
+              </div>
+            </div>
+
+            {!isSpa &&
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">Age</label>
+                <input
+                  type="number"
+                  min={18}
+                  name="age"
+                  value={formData.age}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  disabled={loading}
+                />
+              </div>
+            }
+
+            {/* Nationality */}
+            {!isSpa &&
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">Nationality</label>
+                <input
+                  type="text"
+                  name="nationality"
+                  value={formData.nationality}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  disabled={loading}
+                />
+              </div>
+            }
+
+            {/* Gender */}
+            {!isSpa &&
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">Gender</label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  disabled={loading}
+                >
+                  <option value="">Select gender</option>
+                  {GENDER_OPTIONS.map(option => <option key={option} value={option.toLowerCase()}>{option}</option>)}
+                </select>
+              </div>
+            }
+
+            {/* Sexual Orientation */}
+            {!isSpa &&
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">Sexual Orientation</label>
+                <select
+                  name="sexualOrientation"
+                  value={formData.sexualOrientation}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  disabled={loading}
+                >
+                  <option value="">Select orientation</option>
+                  {ORIENTATION_OPTIONS.map(option => <option key={option} value={option.toLowerCase()}>{option}</option>)}
+                </select>
+              </div>
+            }
+
+            {/* Service Type (Existing) */}
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">Service Type</label>
+              <select
+                name="serviceType"
+                value={formData.serviceType}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                disabled={loading}
+              >
+                <option value="">Select service type</option>
+                <option value="incall">Incall (Client comes to you)</option>
+                <option value="outcall">Outcall (You go to client)</option>
+                <option value="both">Both Incall & Outcall</option>
+                {userData.userType === "of-model" && <option value="online">Online Services</option>}
+              </select>
+            </div>
+
+
+
+            {/* Breast Size */}
+            {!isSpa &&
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">Breast Size</label>
+                <select
+                  name="breastSize"
+                  value={formData.breastSize}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  disabled={loading}
+                >
+                  <option value="">Select breast size</option>
+                  {BREAST_SIZE_OPTIONS.map(option => <option key={option} value={option.toLowerCase()}>{option}</option>)}
+                </select>
+              </div>
+            }
+
+            {/* Body Type */}
+            {!isSpa &&
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">Body Type</label>
+                <select
+                  name="bodyType"
+                  value={formData.bodyType}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  disabled={loading}
+                >
+                  <option value="">Select body type</option>
+                  {BODY_TYPE_OPTIONS.map(option => <option key={option} value={option.toLowerCase()}>{option}</option>)}
+                </select>
+              </div>
+            }
+
+            {/* Serves Who */}
+            {!isSpa &&
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">I Serve</label>
+                <select
+                  name="servesWho"
+                  value={formData.servesWho}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  disabled={loading}
+                >
+                  <option value="">Select who you serve</option>
+                  {SERVES_WHO_OPTIONS.map(option => <option key={option} value={option.toLowerCase()}>{option}</option>)}
+                </select>
+              </div>
+            }
+
+            {/* Ethnicity */}
+            {!isSpa &&
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">Ethnicity</label>
+                <select
+                  name="ethnicity"
+                  value={formData.ethnicity}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  disabled={loading}
+                >
+                  <option value="">Select ethnicity</option>
+                  {ETHNICITY_OPTIONS.map(option => <option key={option} value={option.toLowerCase()}>{option}</option>)}
+                </select>
+              </div>
+            }
+          </>
+        ) : (
+          isSpa ?
+            <>
+              {renderField("Username", formData.username)}
+              {renderField("About (Bio)", formData.bio, true)}
+              {renderField("Service Type", formData.serviceType)}
+            </>
+            : <>
+              {renderField("Username", formData.username)}
+              {renderField("About Me", formData.bio, true)}
+              {renderField("Age", formData.age)}
+              {renderField("Nationality", formData.nationality)}
+              {renderField("Gender", formData.gender)}
+              {renderField("Sexual Orientation", formData.sexualOrientation)}
+              {renderField("Service Type", formData.serviceType)}
+              {renderField("Breast Size", formData.breastSize)}
+              {renderField("Body Type", formData.bodyType)}
+              {renderField("I Serve", formData.servesWho)}
+              {renderField("Ethnicity", formData.ethnicity)}
+              {renderField("Service Type", formData.serviceType)}
+            </>
+        )}
+
+        {/* Action Buttons */}
+        {isEditing ? (
+          <div className="flex gap-3 pt-2">
+            <button
+              onClick={handleSave}
+              disabled={loading}
+              className="flex-1 px-4 py-2.5 bg-primary text-text-inverse rounded-lg font-medium hover:bg-primary-hover transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save"
+              )}
+            </button>
+            <button
+              onClick={handleCancel}
+              disabled={loading}
+              className="px-4 py-2.5 bg-bg-primary text-text-primary rounded-lg font-medium hover:bg-neutral-800 transition-all cursor-pointer hover:text-white"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="w-full mt-2 px-4 py-2.5 bg-primary text-text-inverse rounded-lg font-medium hover:bg-primary-hover transition-all cursor-pointer"
+          >
+            Edit
+          </button>
+        )}
+      </div>
+    </motion.div >
+  )
+}
