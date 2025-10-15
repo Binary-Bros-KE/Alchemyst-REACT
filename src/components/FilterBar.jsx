@@ -7,6 +7,7 @@ export default function FilterBar({ filters, onFilterChange }) {
   const [showFilters, setShowFilters] = useState(false)
 
   const handleFilterChange = (key, value) => {
+    // INSTANT filter change - no API call
     onFilterChange({ ...filters, [key]: value })
   }
 

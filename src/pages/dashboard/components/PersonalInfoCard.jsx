@@ -8,7 +8,7 @@ import toast from "react-hot-toast"
 const GENDER_OPTIONS = ["Female", "Male", "Trans", "Non-binary", "Other"]
 const ORIENTATION_OPTIONS = ["Straight", "Gay", "Bisexual", "Pansexual", "Asexual", "Queer", "Other"]
 const BREAST_SIZE_OPTIONS = ["Small Breasts", "Medium Breast", "Big Natural", "Extra Large", "No Breasts"]
-const BODY_TYPE_OPTIONS = ["Petite", "Average", "Curvy", "Thick", "Plus Size", "Muscular"]
+const BODY_TYPE_OPTIONS = ["Petite", "Average", "Curvy", "Thick", "BBW", "Muscular"]
 const SERVES_WHO_OPTIONS = ["Men", "Women", "Both Men and Women", "Queer Only"]
 const ETHNICITY_OPTIONS = [
   "Black",
@@ -220,8 +220,8 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
                 value={formData.bio}
                 onChange={handleInputChange}
                 placeholder={`${isSpa ? "A preview of your spa. Keep it short and sweet.💋🍭" : "A preview of who you are. Keep it short and sweet.💋🍭"}`}
-                rows={3}
-                maxLength={200}
+                rows={isSpa ? 10 : 3}
+                maxLength={isSpa ? 500 : 200}
                 className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
                 disabled={loading}
               />
@@ -230,7 +230,7 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
                   This helps clients get to know you better
                 </p>
                 <p className={`text-xs ${getBioCharacterColor()}`}>
-                  {getBioCharacterCount()}/200
+                  {getBioCharacterCount()}/{isSpa ? 500 : 200}
                 </p>
               </div>
             </div>

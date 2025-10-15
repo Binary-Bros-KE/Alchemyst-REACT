@@ -216,13 +216,22 @@
         "capital": "Kisumu",
         "code": 42,
         "sub_counties": [
-            "Kisumu central",
+            "Ahero",
+            "Katito",
+            "Kisumu Town",
             "Kisumu east ",
             "Kisumu west",
+            "Kondele",
+            "Lakefront",
+            "Lolwe",
+            "Maseno",
+            "Migosi",
+            "Milimani",
             "Mohoroni",
             "Nyakach",
             "Nyando",
-            "Seme"
+            "Seme",
+            "Sondu"
         ]
     },
     {
@@ -367,12 +376,25 @@
         "capital": "Mombasa City",
         "code": 1,
         "sub_counties": [
+            "Bamburi",
+            "Bombolulu",
+            "Bombolulu Estate",
             "Changamwe",
-            "Jomvu",
-            "Kisauni",
+            "Ganjoni",
+            "Kiembeni",
+            "Kizingo",
             "Likoni",
-            "Mvita",
-            "Nyali"
+            "Majengo",
+            "Mikindani",
+            "Shanzu",
+            "Miritini",
+            "Nyali",
+            "Mombasa CBD",
+            "Mshomoroni",
+            "Mtopanga",
+            "Mtwapa",
+            "Port Reitz",
+            "Tononoka"
         ]
     },
     {
@@ -485,15 +507,29 @@
         "sub_counties": [
             "Bahati",
             "Gilgil",
-            "Kuresoi north",
-            "Kuresoi south",
-            "Molo",
+            "Barnabas",
+            "Lanet Umoja",
+            "Free Area",
             "Naivasha",
-            "Nakuru town east",
-            "Nakuru town west",
-            "Njoro",
-            "Rongai",
-            "Subukia"
+            "JB",
+            "Kiambogo",
+            "Kiamunyi",
+            "Kiratina",
+            "Kiti",
+            "Kiundu",
+            "Lanet",
+            "Maili Kumi",
+            "Maili Sita",
+            "Mawanga",
+            "Milimani",
+            "Nakuru Town",
+            "Ndundori",
+            "Ngorika",
+            "Pipeline",
+            "Solai",
+            "Tabuga",
+            "Wanyororo",
+            "White House"
         ]
     },
     {

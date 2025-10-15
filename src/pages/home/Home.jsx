@@ -1,137 +1,58 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
-import { FiSearch, FiMapPin } from "react-icons/fi"
-import { toast } from "react-hot-toast"
+import { FiSearch, FiMapPin, FiRefreshCw } from "react-icons/fi"
+
+import { useProfiles } from "../../hooks/useProfiles"
 import locationsData from "../../data/counties.json"
-import ProfileCard from "./components/ProfileCard"
-import SpaCard from "./components/SpaCard"
+import ProfileCard from "../../components/ProfileCard"
+import SpaCard from "../../components/SpaCard"
 import CategoryButtons from "./components/CategoryButtons"
 import PopularAreas from "./components/PopularAreas"
-import FilterBar from "./components/FilterBar"
-
-const API_URL = import.meta.env.VITE_API_URL
+import FilterBar from "../../components/FilterBar"
 
 export default function Home() {
   const navigate = useNavigate()
-  const [selectedCounty, setSelectedCounty] = useState("all")
+  const {
+    profiles,
+    spas,
+    loading,
+    error,
+    updateFilters,
+    updateCounty,
+    refreshProfiles,
+    filters,
+    selectedCounty,
+    totalProfiles,
+    displayedCount,
+    lastFetchTime,
+    isStale
+  } = useProfiles()
+
   const [searchQuery, setSearchQuery] = useState("")
   const [suggestions, setSuggestions] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false)
 
-  const [profiles, setProfiles] = useState([])
-  const [spas, setSpas] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
-  const fetchingRef = useRef(false)
-  const [filters, setFilters] = useState({
-    userType: "all", // all, escort, masseuse, of-model
-    gender: "all", // all, female, trans
-    bodyType: "all",
-    breastSize: "all",
-  })
+  // Search suggestions
+  const handleSearchChange = (value) => {
+    setSearchQuery(value)
 
-  // Replace the scroll effect with:
-  useEffect(() => {
-    const handleScroll = () => {
-      // More strict conditions to prevent unnecessary calls
-      const scrolledToBottom =
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - 500
-
-      if (scrolledToBottom && !loading && hasMore) {
-        setPage((prev) => prev + 1)
-      }
-    }
-
-    // Only add listener if there's more to load
-    if (hasMore && !loading) {
-      window.addEventListener("scroll", handleScroll)
-      return () => window.removeEventListener("scroll", handleScroll)
-    }
-  }, [loading, hasMore])
-
-  // Change fetchProfiles to accept page parameter
-  const fetchProfiles = async (pageNum = page) => {
-    if (fetchingRef.current) {
-      console.log('Fetch already in progress, skipping...')
+    if (value.length < 2) {
+      setSuggestions([])
+      setShowSuggestions(false)
       return
     }
 
-    try {
-      fetchingRef.current = true
-      setLoading(true)
-      const queryParams = new URLSearchParams({
-        page: pageNum.toString(),
-        limit: "20",
-        ...(selectedCounty !== "all" && { county: selectedCounty }), // Only add if not "all"
-        ...(filters.userType !== "all" && { userType: filters.userType }),
-        ...(filters.gender !== "all" && { gender: filters.gender }),
-        ...(filters.bodyType !== "all" && { bodyType: filters.bodyType }),
-        ...(filters.breastSize !== "all" && { breastSize: filters.breastSize }),
-      })
-
-      const response = await fetch(`${API_URL}/profiles?${queryParams}`, {
-        headers: { "Content-Type": "application/json" },
-      })
-
-      const data = await response.json()
-      console.log(`data`, data);
-
-      if (data.success && data.profiles) {
-        const newSpas = data.profiles.filter((p) => p.userType === "spa")
-        const newProfiles = data.profiles.filter((p) => p.userType !== "spa")
-
-        if (pageNum === 1) { // Use pageNum instead of page
-          setProfiles(newProfiles)
-          setSpas(newSpas)
-        } else {
-          setProfiles((prev) => [...prev, ...newProfiles])
-          setSpas((prev) => [...prev, ...newSpas])
-        }
-
-        setHasMore(data.pagination?.hasMore ?? false)
-      } else {
-        setHasMore(false)
-      }
-    } catch (error) {
-      toast.error("Failed to load profiles")
-      console.error("[v0] Error fetching profiles:", error)
-      setHasMore(false)
-    } finally {
-      setLoading(false)
-      fetchingRef.current = false
+    if (selectedCounty === "all") {
+      setSuggestions([])
+      setShowSuggestions(false)
+      return
     }
-  }
 
-  // Then the useEffect becomes:
-  useEffect(() => {
-    fetchProfiles(page)
-  }, [page, filters, selectedCounty])
-
-
-
-const handleSearchChange = (value) => {
-  setSearchQuery(value)
-
-  if (value.length < 2) {
-    setSuggestions([])
-    setShowSuggestions(false)
-    return
-  }
-
-  // Add this check
-  if (selectedCounty === "all") {
-    setSuggestions([])
-    setShowSuggestions(false)
-    return
-  }
-
-  const county = locationsData.find((c) => c.name === selectedCounty)
-  if (!county) return
+    const county = locationsData.find((c) => c.name === selectedCounty)
+    if (!county) return
 
     const normalizedQuery = value.toLowerCase().replace(/\s+/g, "")
     const matches = []
@@ -158,25 +79,31 @@ const handleSearchChange = (value) => {
 
   const handleSuggestionClick = (suggestion) => {
     if (suggestion.type === "location") {
-      navigate(`/location/${selectedCounty}/${suggestion.value}`)
+      navigate(`/${selectedCounty}/${suggestion.value}`)
     } else {
-      navigate(`/location/${selectedCounty}?area=${suggestion.value}`)
+      navigate(`/${selectedCounty}?area=${suggestion.value}`)
     }
   }
 
   const handleFilterChange = (newFilters) => {
-    setFilters(newFilters)
-    setPage(1)
-    setProfiles([])
-    setSpas([])
-    setHasMore(true) // Add this - reset hasMore when filters change
+    updateFilters(newFilters)
+  }
+
+  const formatLastUpdate = () => {
+    if (!lastFetchTime) return "Never"
+    const minutes = Math.floor((Date.now() - lastFetchTime) / 60000)
+    if (minutes === 0) return "Just now"
+    if (minutes === 1) return "1 minute ago"
+    if (minutes < 60) return `${minutes} minutes ago`
+    return "Over an hour ago"
   }
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Hero Section */}
       <div className="bg-gradient-to-b from-neutral-900 to-background py-16 px-4">
         <div className="container mx-auto max-w-6xl">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4">
             <h1 className="text-4xl md:text-5xl font-bold text-text-inverse mb-4">Home of independent escorts</h1>
             <p className="text-lg text-text-inverse/70">
               Listing thousands of independent adult entertainers. Escorts, massage, and much more.
@@ -189,16 +116,10 @@ const handleSearchChange = (value) => {
                 <div className="flex gap-2">
                   <select
                     value={selectedCounty}
-                    onChange={(e) => {
-                      setSelectedCounty(e.target.value)
-                      setPage(1)
-                      setProfiles([])
-                      setSpas([])
-                      setHasMore(true)
-                    }}
+                    onChange={(e) => updateCounty(e.target.value)}
                     className="px-4 py-3 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   >
-                    <option value="all">All Counties</option> {/* Add this */}
+                    <option value="all">All Counties</option>
                     {locationsData.map((county) => (
                       <option key={county.code} value={county.name}>
                         {county.name}
@@ -255,19 +176,69 @@ const handleSearchChange = (value) => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      {/* Content Section */}
+      <div className="container mx-auto px-4 py-4 max-w-7xl">
+        {/* Refresh Button and Status */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={refreshProfiles}
+              disabled={loading}
+              className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Refresh profiles data"
+            >
+              <FiRefreshCw className={`${loading ? 'animate-spin' : ''}`} />
+              <span className="text-sm">Refresh</span>
+            </button>
+            
+            <div className="text-sm text-muted-foreground">
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  Loading profiles...
+                </span>
+              ) : (
+                <span>
+                  Last updated: {formatLastUpdate()}
+                  {isStale && <span className="text-orange-500 ml-2">(Data may be stale)</span>}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {totalProfiles > 0 && (
+            <div className="text-sm text-muted-foreground">
+              {displayedCount} of {totalProfiles} profiles
+            </div>
+          )}
+        </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-700">{error}</p>
+            <button
+              onClick={refreshProfiles}
+              className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
+            >
+              Try again
+            </button>
+          </div>
+        )}
+
         <CategoryButtons onCategorySelect={(category) => handleFilterChange({ ...filters, userType: category })} />
 
-        {selectedCounty !== "all" && <PopularAreas county={selectedCounty} />}
+        {selectedCounty && selectedCounty !== "all" && <PopularAreas county={selectedCounty} />}
 
         <FilterBar filters={filters} onFilterChange={handleFilterChange} />
 
+        {/* Spas Section */}
         {spas.length > 0 && (
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-foreground">Featured Spas & Businesses</h2>
               <button
-                onClick={() => navigate(`/location/${selectedCounty}?type=spa`)}
+                onClick={() => navigate(`/${selectedCounty}?type=spa`)}
                 className="text-primary hover:text-primary/80 font-medium"
               >
                 See all →
@@ -281,12 +252,18 @@ const handleSearchChange = (value) => {
           </div>
         )}
 
+        {/* Profiles Section */}
         <div>
           <h2 className="text-2xl font-bold text-foreground mb-6">
             Available Now {selectedCounty !== "all" ? `in ${selectedCounty}` : ""}
+            {profiles.length > 0 && (
+              <span className="text-lg text-muted-foreground font-normal ml-2">
+                ({profiles.length} {profiles.length === 1 ? 'profile' : 'profiles'})
+              </span>
+            )}
           </h2>
 
-          {loading && page === 1 ? (
+          {loading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {[...Array(10)].map((_, i) => (
                 <div key={i} className="aspect-[3/4] bg-muted animate-pulse rounded-lg" />
@@ -294,26 +271,26 @@ const handleSearchChange = (value) => {
             </div>
           ) : profiles.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-muted-foreground text-lg">No profiles found. Try adjusting your filters.</p>
+              <p className="text-muted-foreground text-lg">
+                {totalProfiles === 0 
+                  ? "No profiles available. Check back later!" 
+                  : "No profiles found. Try adjusting your filters."}
+              </p>
+              {totalProfiles > 0 && displayedCount === 0 && (
+                <button
+                  onClick={() => updateFilters({ userType: 'all', gender: 'all', bodyType: 'all', breastSize: 'all' })}
+                  className="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                >
+                  Clear Filters
+                </button>
+              )}
             </div>
           ) : (
-            <>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {profiles.map((profile) => (
-                  <ProfileCard key={profile._id} profile={profile} />
-                ))}
-              </div>
-
-              {loading && page > 1 && (
-                <div className="flex justify-center py-8">
-                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                </div>
-              )}
-
-              {!hasMore && profiles.length > 0 && (
-                <p className="text-center text-muted-foreground py-8">You've reached the end of the list</p>
-              )}
-            </>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-md:gap-2">
+              {profiles.map((profile) => (
+                <ProfileCard key={profile._id} profile={profile} />
+              ))}
+            </div>
           )}
         </div>
       </div>

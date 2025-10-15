@@ -28,7 +28,7 @@ import "swiper/css/thumbs"
 import "swiper/css/free-mode"
 import ProfileCard from "../../components/ProfileCard"
 import { BsWhatsapp } from "react-icons/bs"
-import { fetchProfileDetails, fetchSimilarProfiles } from "../../redux/profileDetailsSlice"
+import { fetchProfileDetails, fetchSimilarProfiles } from "../../redux/profileDetailsSlice" // Remove clearCurrentProfile
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -37,17 +37,14 @@ export default function ProfileDetailsPage() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  // Get data from Redux store - check both currentProfile and allProfiles cache
+  // Get data from Redux store
   const { currentProfile, similarProfiles, loading, loadingSimilar, profileCache } = useSelector(state => state.profileDetails)
-  const { allProfiles } = useSelector(state => state.profiles) // NEW: Check main profiles cache
 
   const [thumbsSwiper, setThumbsSwiper] = useState(null)
   const [copied, setCopied] = useState(false)
 
-  // NEW: Enhanced profile lookup - check multiple sources for instant data
-  const profile = currentProfile || 
-                  profileCache[params.userId]?.profile ||
-                  allProfiles.find(p => p._id === params.userId) // Check main profiles cache
+  // Use profile from Redux store - FIX: Always check cache first
+  const profile = currentProfile || profileCache[params.userId]?.profile
 
   // Helper component for the diagonal ribbon style
   const Ribbon = ({ text, colorClass, icon, top }) => (
@@ -114,9 +111,9 @@ export default function ProfileDetailsPage() {
   useEffect(() => {
     window.scrollTo(0, 0)
     
-    // NEW: Enhanced cache checking - only fetch if truly needed
-    const cachedProfile = profileCache[params.userId] || allProfiles.find(p => p._id === params.userId)
-    const isCachedDataStale = !cachedProfile || (cachedProfile.timestamp && Date.now() - cachedProfile.timestamp > 10 * 60 * 1000)
+    // FIX: Always check cache first, only fetch if truly needed
+    const cachedProfile = profileCache[params.userId]
+    const isCachedDataStale = !cachedProfile || (Date.now() - cachedProfile.timestamp > 10 * 60 * 1000)
 
     if (!cachedProfile || isCachedDataStale) {
       // Only fetch if no cache or cache is stale
@@ -127,7 +124,7 @@ export default function ProfileDetailsPage() {
     }
 
     trackView()
-  }, [params.userType, params.userId, dispatch, profileCache, allProfiles])
+  }, [params.userType, params.userId, dispatch, profileCache])
 
   useEffect(() => {
     if (profile) {
@@ -140,6 +137,9 @@ export default function ProfileDetailsPage() {
       }))
     }
   }, [profile, params.userId, dispatch])
+
+  // FIX: Remove the cleanup effect that clears the profile
+  // This was causing the "profile not found" issue when navigating back
 
   const trackView = async () => {
     try {
@@ -230,10 +230,8 @@ export default function ProfileDetailsPage() {
     return badges[packageType] || null
   }
 
-  // NEW: Tight loading state - only show loading when truly loading AND no cached data
-  const hasCachedData = profileCache[params.userId] || allProfiles.find(p => p._id === params.userId)
-  
-  if (loading && !hasCachedData) {
+  // FIX: Improved loading state - only show loading when truly loading AND no cached data
+  if (loading && !profile) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -241,7 +239,7 @@ export default function ProfileDetailsPage() {
     )
   }
 
-  // NEW: Only show "not found" if we're not loading AND no profile exists in any cache
+  // FIX: Only show "not found" if we're not loading AND no profile exists
   if (!profile && !loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -258,10 +256,11 @@ export default function ProfileDetailsPage() {
     )
   }
 
-  // If we have a profile (from any cache or fetch), render the page
+  // If we have a profile (from cache or fetch), render the page
   const isSpa = profile.userType === "spa"
   const allImages = [profile.profileImage, ...(profile.secondaryImages || [])].filter(Boolean)
   const packageBadge = getPackageBadge()
+
 
   return (
     <div className="min-h-screen bg-white">

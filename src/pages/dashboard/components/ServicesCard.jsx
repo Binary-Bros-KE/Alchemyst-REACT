@@ -23,6 +23,9 @@ const COMMON_SERVICES = [
   "BJ",
   "Raw BJ",
   "Rimming",
+  "Raw Sex",
+  "Golden Shower",
+  "Sex Toys",
 ]
 
 const PRICING_UNITS = ["Per Hour", "Per Service", "Per Night", "Per Day", "Per Session", "Per Week", "Per Month", "Per Video"]

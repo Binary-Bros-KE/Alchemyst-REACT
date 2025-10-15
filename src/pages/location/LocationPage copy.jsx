@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux"
 import ProfileCard from "../../components/ProfileCard"
 import SpaCard from "../../components/SpaCard"
 import FilterBar from "../../components/FilterBar"
-import { applyFilters } from "../../redux/profilesSlice" // REMOVED: fetchInitialProfiles
+import { fetchInitialProfiles, applyFilters } from "../../redux/profilesSlice"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -27,21 +27,18 @@ export default function LocationPage() {
   const [areasList, setAreasList] = useState([])
   const [packageProfiles, setPackageProfiles] = useState({ elite: [], premium: [], basic: [] })
   const [packageSpas, setPackageSpas] = useState({ elite: [], premium: [], basic: [] })
-  const [localLoading, setLocalLoading] = useState(false) // NEW: For local filtering operations
 
-  // REMOVED: The initial fetch useEffect - data should already be in Redux from useProfiles hook
+  useEffect(() => {
+    // If no profiles loaded yet, fetch initial data
+    if (allProfiles.length === 0) {
+      dispatch(fetchInitialProfiles())
+    }
+  }, [dispatch, allProfiles.length])
 
   useEffect(() => {
     if (allProfiles.length > 0) {
-      setLocalLoading(true)
-      // Use setTimeout to ensure UI doesn't flash during quick filtering
-      const timer = setTimeout(() => {
-        filterProfiles()
-        extractLocationsAndAreas()
-        setLocalLoading(false)
-      }, 50)
-      
-      return () => clearTimeout(timer)
+      filterProfiles()
+      extractLocationsAndAreas()
     }
   }, [allProfiles, county, location, area])
 
@@ -194,11 +191,6 @@ export default function LocationPage() {
     return `Browse all locations in ${county} County`
   }
 
-  // NEW: Tight loading state logic
-  const showLoading = (loading && allProfiles.length === 0) || localLoading
-  const showNoResults = !showLoading && allProfiles.length > 0 && totalProfiles === 0 && totalSpas === 0
-  const showContent = !showLoading && !showNoResults
-
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-b from-neutral-900 to-background py-10 px-4">
@@ -280,26 +272,28 @@ export default function LocationPage() {
       </div>
 
       <div className="container mx-auto px-4 py-4 max-w-7xl">
-        {/* TIGHT LOADING STATE - Only show loading when truly loading AND no cached data */}
-        {showLoading ? (
+        {/* IMPROVED LOADING STATE - Only show loading when truly loading AND no data */}
+        {loading && allProfiles.length === 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {[...Array(10)].map((_, i) => (
               <div key={i} className="aspect-[3/4] bg-muted animate-pulse rounded-lg" />
             ))}
           </div>
-        ) : showNoResults ? (
+        ) : totalProfiles === 0 && totalSpas === 0 ? (
           <div className="text-center py-10">
             <p className="text-muted-foreground text-lg">
-              No profiles found in this location.
+              {allProfiles.length === 0 ? "Loading profiles..." : "No profiles found in this location."}
             </p>
-            <button
-              onClick={() => navigate(-1)}
-              className="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all"
-            >
-              Go Back
-            </button>
+            {allProfiles.length > 0 && (
+              <button
+                onClick={() => navigate(-1)}
+                className="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all"
+              >
+                Go Back
+              </button>
+            )}
           </div>
-        ) : showContent && (
+        ) : (
           <>
             {/* VIP Spas */}
             {renderSpaSection(

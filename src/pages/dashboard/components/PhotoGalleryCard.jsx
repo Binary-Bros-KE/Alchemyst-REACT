@@ -23,8 +23,8 @@ export default function PhotoGalleryCard({ userData, updateUserData }) {
   const [uploading, setUploading] = useState(false)
   const [deleting, setDeleting] = useState(null)
 
-  const isBasicPackage = userData?.currentPackage && userData?.currentPackage?.packageType === "basic";
-  const MAX_SECONDARY_IMAGES = userData.userType === "spa" ? isBasicPackage ? 5 : 10 : 2
+  const isPremiumPackage = userData?.currentPackage && (userData?.currentPackage?.packageType === "premium" || userData?.currentPackage?.packageType === "elite");
+  const MAX_SECONDARY_IMAGES = userData.userType === "spa" ? isPremiumPackage ? 10 : 5 : 2
 
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,

@@ -20,6 +20,7 @@ export default function ContactDetailsCard({ userData, updateUserData }) {
     prefersCall: userData?.contact?.prefersCall || false,
     telegramLink: userData?.contact?.telegramLink || "",
     onlyFansLink: userData?.contact?.onlyFansLink || "",
+    secondaryPhone: userData?.contact?.secondaryPhone || "",
   })
 
 
@@ -39,6 +40,8 @@ export default function ContactDetailsCard({ userData, updateUserData }) {
       prefersCall: userData?.contact?.prefersCall || "",
       telegramLink: userData?.contact?.telegramLink || "",
       onlyFansLink: userData?.contact?.onlyFansLink || "",
+      secondaryPhone: userData?.contact?.secondaryPhone || "",
+
     });
   }, [userData]);
 
@@ -55,6 +58,9 @@ export default function ContactDetailsCard({ userData, updateUserData }) {
         hasWhatsApp: formData.hasWhatsApp,
         prefersCall: formData.prefersCall,
         telegramLink: formData.telegramLink?.trim() || null,
+        ...(userData?.userType === "spa" && {
+          secondaryPhone: formData.secondaryPhone?.trim() || null,
+        }),
         ...(userData?.userType === "of-model" && {
           onlyFansLink: formData.onlyFansLink?.trim() || null,
         }),
@@ -74,15 +80,16 @@ export default function ContactDetailsCard({ userData, updateUserData }) {
       if (!response.ok) throw new Error(data.message || "Failed to update contact details")
 
       toast.success("Contact details updated successfully!")
-      updateUserData({ 
+      updateUserData({
         contact: {
           phoneNumber: data.data.phoneNumber,
           hasWhatsApp: data.data.hasWhatsApp,
           prefersCall: data.data.prefersCall,
           telegramLink: data.data.telegramLink,
           onlyFansLink: data.data.onlyFansLink,
+          secondaryPhone: data.data.secondaryPhone,
         }
-       })
+      })
       setIsEditing(false)
     } catch (error) {
       toast.error(error.message)
@@ -156,6 +163,21 @@ export default function ContactDetailsCard({ userData, updateUserData }) {
                 </div>
               </label>
             </div>
+
+            {userData?.userType === "spa" && (
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">Secondary Phone (optional)</label>
+                <input
+                  type="tel"
+                  value={formData.secondaryPhone}
+                  onChange={(e) => setFormData({ ...formData, secondaryPhone: e.target.value })}
+                  placeholder="+254 711 000 000"
+                  className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  disabled={loading}
+                />
+              </div>
+            )}
+
 
             {/* Telegram Link */}
             <div>

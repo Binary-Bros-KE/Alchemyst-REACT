@@ -1,0 +1,39 @@
+/* Custom Swiper styles for profile page */
+.swiper-button-next,
+.swiper-button-prev {
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  backdrop-filter: blur(4px);
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 18px;
+}
+
+.swiper-pagination-bullet {
+  background: white;
+  opacity: 0.7;
+}
+
+.swiper-pagination-bullet-active {
+  background: white;
+  opacity: 1;
+}
+
+.thumbs-swiper .swiper-slide {
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.thumbs-swiper .swiper-slide-thumb-active {
+  opacity: 1;
+}
+
+.similar-profiles-swiper .swiper-button-next,
+.similar-profiles-swiper .swiper-button-prev {
+  background: rgba(236, 72, 153, 0.9);
+}
