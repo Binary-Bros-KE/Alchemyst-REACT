@@ -9,6 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL
 export default function SpaCard({ profile }) {
   const navigate = useNavigate()
   const [copied, setCopied] = useState(false)
+  const [showBio, setShowBio] = useState(false)
 
   const Ribbon = ({ text, colorClass, icon, top }) => (
     <div
@@ -50,7 +51,7 @@ export default function SpaCard({ profile }) {
 
   const handleViewProfile = () => {
     trackInteraction("profile_view")
-    navigate(`/profile/${profile._id}`)
+    navigate(`/profile/${profile.userType}/${profile._id}`)
   }
 
   const handleCopyPhone = async (e) => {
@@ -131,15 +132,34 @@ export default function SpaCard({ profile }) {
     <motion.div
       className="bg-card rounded-lg overflow-hidden shadow-lg cursor-pointer group border-2 border-primary/50 relative"
       onClick={handleViewProfile}
+      onMouseEnter={() => setShowBio(true)}
+      onMouseLeave={() => setShowBio(false)}
     >
       {renderBadges()}
       <div className="relative">
-        <div className="aspect-[16/9] relative overflow-hidden">
+        <div className="aspect-[16/9] relative overflow-hidden relative">
           <img
             src={profile.profileImage?.url || "/placeholder.svg?height=400&width=700"}
             alt={profile.username}
             className="w-full h-full object-cover transition-transform duration-300"
           />
+
+          {showBio && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-black/60 p-4 flex flex-col justify-center items-center text-center"
+            >
+              <div className="flex flex-wrap items-center justify-center mb-2">
+                {profile.services && profile.services.slice(0, 6).map((service) => (
+                  <span className="bg-blue-400 text-white rounded-lg m-1 text-sm px-2 ">{service.name}</span>
+                ))}
+              </div>
+              <button className="px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-all cursor-pointer text-sm">
+                View Full Profile
+              </button>
+            </motion.div>
+          )}
         </div>
 
         <div className="grid grid-cols-5 gap-1 absolute -bottom-15 justify-center items-center w-full">
@@ -161,9 +181,9 @@ export default function SpaCard({ profile }) {
           <FiMapPin />
           {profile.location?.county}, {profile.location?.location}
         </p>
-        <p className="text-xs text-blue-600/50 font-bold flex items-center gap-2 mb-2">
+        <div className="text-xs text-blue-600/50 font-bold flex items-center gap-2 mb-2">
           <div className="h-2 w-2 bg-blue-600/50 rounded-full"></div> {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'men' ? 'Incalls Only' : 'Outcalls Only'}
-        </p>
+        </div>
 
         {profile.bio && <p className="text-sm text-foreground/80 mb-2 line-clamp-2">{profile.bio}</p>}
 

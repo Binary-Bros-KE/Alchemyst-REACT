@@ -171,7 +171,7 @@ export default function ProfileCard({ profile }) {
 
       <div className="bg-white p-3 space-y-2 max-md:p-2">
         <h3 className="font-bold text-primary capitalize truncate text-md">{profile.username} ({profile.age} yrs)</h3>
-        <p className="text-sm text-muted-foreground truncate flex items-center gap-1">
+        <p className="text-md text-muted-foreground truncate flex items-center gap-1">
           <BiLocationPlus size={12} />
           {profile.location?.county}, {profile.location?.location}
         </p>

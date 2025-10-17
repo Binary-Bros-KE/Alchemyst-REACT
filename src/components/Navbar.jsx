@@ -84,9 +84,11 @@ export default function Navbar() {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/escorts", label: "Escorts" },
-    { href: "/massage", label: "Massage" },
-    { href: "/spas", label: "Erotic Spas" },
+    { href: "/?userType=escort", label: "Escorts" },
+    { href: "/?serviceType=massage", label: "Massage" },
+    { href: "/?userType=OFModel", label: "OF Models" },
+    { href: "/?userType=spa", label: "Erotic Spas" },
+    { href: "/blog", label: "Blog" },
   ];
 
   const renderNavLink = (link, isMobile = false) => (

@@ -60,6 +60,7 @@ const profileDetailsSlice = createSlice({
       state.similarProfiles = []
       state.error = null
     },
+    
     // Update profile in cache (useful when profile is updated elsewhere)
     updateCachedProfile: (state, action) => {
       const updatedProfile = action.payload
@@ -72,6 +73,16 @@ const profileDetailsSlice = createSlice({
       if (state.currentProfile?._id === updatedProfile._id) {
         state.currentProfile = { ...state.currentProfile, ...updatedProfile }
       }
+    },
+    
+    // NEW: Clear similar profiles
+    clearSimilarProfiles: (state) => {
+      state.similarProfiles = []
+    },
+    
+    // NEW: Manually set similar profiles (for client-side filtering)
+    setSimilarProfiles: (state, action) => {
+      state.similarProfiles = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -111,5 +122,10 @@ const profileDetailsSlice = createSlice({
   }
 })
 
-export const { clearCurrentProfile, updateCachedProfile } = profileDetailsSlice.actions
+export const { 
+  clearCurrentProfile, 
+  updateCachedProfile, 
+  clearSimilarProfiles, 
+  setSimilarProfiles 
+} = profileDetailsSlice.actions
 export default profileDetailsSlice.reducer

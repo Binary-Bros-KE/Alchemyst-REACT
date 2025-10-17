@@ -132,8 +132,8 @@ if (
   return (
     <div className="min-h-screen bg-bg-primary">
 
-      <div className="bg-secondary border-b border-border-light">
-        <div className="container mx-auto px-4 py-8">
+      <div className="bg-secondary border-b border-border-light flex justify-center">
+        <div className="container py-8  max-w-7xl px-4 ">
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <h1 className="text-3xl md:text-4xl font-bold text-text-inverse mb-2">
               Welcome back, {userData?.username}!
@@ -190,7 +190,7 @@ if (
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container max-w-7xl px-4 py-8 mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-6">

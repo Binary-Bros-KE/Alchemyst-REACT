@@ -9,6 +9,11 @@ import ProfileCard from "../../components/ProfileCard"
 import SpaCard from "../../components/SpaCard"
 import FilterBar from "../../components/FilterBar"
 import { applyFilters } from "../../redux/profilesSlice" // REMOVED: fetchInitialProfiles
+import { IoStarOutline } from "react-icons/io5"
+import { MdOutlineLocalFireDepartment } from "react-icons/md"
+import { LuLeaf, LuSearchCheck, LuSpade } from "react-icons/lu"
+import { CgGirl } from "react-icons/cg"
+import { GiCurlyMask, GiDualityMask, GiSelfLove } from "react-icons/gi"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -22,12 +27,12 @@ export default function LocationPage() {
 
   // Get data from Redux store - updated to match new structure
   const { allProfiles, filteredProfiles, filteredSpas, loading } = useSelector(state => state.profiles)
-  
+
   const [locationsList, setLocationsList] = useState([])
   const [areasList, setAreasList] = useState([])
   const [packageProfiles, setPackageProfiles] = useState({ elite: [], premium: [], basic: [] })
   const [packageSpas, setPackageSpas] = useState({ elite: [], premium: [], basic: [] })
-  const [localLoading, setLocalLoading] = useState(false) // NEW: For local filtering operations
+  const [localLoading, setLocalLoading] = useState(false)
 
   // REMOVED: The initial fetch useEffect - data should already be in Redux from useProfiles hook
 
@@ -40,7 +45,7 @@ export default function LocationPage() {
         extractLocationsAndAreas()
         setLocalLoading(false)
       }, 50)
-      
+
       return () => clearTimeout(timer)
     }
   }, [allProfiles, county, location, area])
@@ -121,21 +126,21 @@ export default function LocationPage() {
   // Rest of your component remains the same...
   const handleLocationClick = (loc) => {
     if (loc === 'all') {
-      navigate(`/${county}`)
+      navigate(`/location/${county}`)
     } else {
-      navigate(`/${county}/${loc}`)
+      navigate(`/location/${county}/${loc}`)
     }
   }
 
   const handleAreaClick = (areaName) => {
     if (areaName === 'all') {
-      navigate(`/${county}/${location}`)
+      navigate(`/location/${county}/${location}`)
     } else {
-      navigate(`/${county}/${location}/${areaName}`)
+      navigate(`/location/${county}/${location}/${areaName}`)
     }
   }
 
-  const renderProfileSection = (tier, tierProfiles, title, description) => {
+  const renderProfileSection = (tier, icon, tierProfiles, title, description) => {
     if (tierProfiles.length === 0) return null
 
     return (
@@ -144,7 +149,10 @@ export default function LocationPage() {
           tier === 'premium' ? 'bg-purple-50 border-purple-400' :
             'bg-gray-50 border-gray-400'
           }`}>
-          <h2 className="text-2xl font-bold text-foreground mb-2">{title}</h2>
+          <div className="flex items-center gap-2 mb-2">
+            <span>{icon}</span>
+            <h2 className="text-2xl font-bold text-foreground">{title}</h2>
+          </div>
           <p className="text-muted-foreground">{description}</p>
         </div>
 
@@ -157,7 +165,7 @@ export default function LocationPage() {
     )
   }
 
-  const renderSpaSection = (tier, tierSpas, title, description) => {
+  const renderSpaSection = (tier, icon, tierSpas, title, description) => {
     if (tierSpas.length === 0) return null
 
     return (
@@ -166,7 +174,10 @@ export default function LocationPage() {
           tier === 'premium' ? 'bg-purple-50 border-purple-400' :
             'bg-gray-50 border-gray-400'
           }`}>
-          <h2 className="text-2xl font-bold text-foreground mb-2">{title}</h2>
+          <div className="flex items-center gap-2 mb-2">
+            <span>{icon}</span>
+            <h2 className="text-2xl font-bold text-foreground">{title}</h2>
+          </div>
           <p className="text-muted-foreground">{description}</p>
         </div>
 
@@ -304,33 +315,37 @@ export default function LocationPage() {
             {/* VIP Spas */}
             {renderSpaSection(
               "elite",
+              <IoStarOutline size={30} />,
               packageSpas.elite,
-              "⭐ VIP BUSINESSES",
-              "Premium verified businesses with priority placement and exclusive features"
+              "VIP LUXURY SPAS & PARLORS",
+              `Step into ultimate luxury with ${area || location || county}'s most exclusive adult entertainment venues. These premium spas offer VIP treatment, elite services, and complete discretion for the discerning client.`
             )}
 
             {/* VIP Profiles */}
             {renderProfileSection(
               "elite",
+              <MdOutlineLocalFireDepartment size={30} />,
               packageProfiles.elite,
-              "⭐ VIP PROFILES",
-              "Premium verified profiles with priority placement, boosted visibility, and exclusive features"
+              "VIP ESCORTS & MODELS",
+              `These are the sexiest call girls, escorts, masseuses and OF models in ${area || location || county}. Step into a world of pleasure - these girls are guaranteed to satisfy your desires. With verified profiles, expect no surprises, just premium service.`
             )}
 
             {/* Premium Spas */}
             {renderSpaSection(
               "premium",
+              <LuLeaf size={30} />,
               packageSpas.premium,
-              "✨ PREMIUM BUSINESSES",
-              "Featured businesses with enhanced visibility"
+              "PREMIUM RELAXATION SPOTS",
+              `Discover ${area || location || county}'s finest massage parlors and adult spas. These establishments offer professional services, clean facilities, and experienced staff for your complete satisfaction.`
             )}
 
             {/* Premium Profiles */}
             {renderProfileSection(
               "premium",
+              <CgGirl size={30} />,
               packageProfiles.premium,
-              "✨ PREMIUM PROFILES",
-              "Featured profiles with enhanced visibility and priority in search results"
+              "FEATURED INDEPENDENT MODELS",
+              `Meet ${area || location || county}'s most sought-after independent escorts and models. These verified professionals offer premium companionship services with complete discretion and professional approach.`
             )}
 
             {/* Clear separation for regular profiles */}
@@ -346,23 +361,164 @@ export default function LocationPage() {
             {/* Basic Spas */}
             {renderSpaSection(
               "basic",
+              <LuSpade size={30} />,
               packageSpas.basic,
               packageSpas.elite.length === 0 && packageSpas.premium.length === 0
-                ? "BUSINESSES"
-                : "STANDARD BUSINESSES",
-              "Quality verified businesses"
+                ? "QUALITY SPAS & MASSAGE CENTERS"
+                : "QUALITY SPAS & MASSAGE CENTERS",
+              `Reliable and affordable spa services in ${area || location || county}. These establishments provide quality massage and adult entertainment services with verified credentials and customer satisfaction.`
             )}
 
             {/* Basic Profiles */}
             {renderProfileSection(
               "basic",
+              <GiSelfLove size={30} />,
               packageProfiles.basic,
               packageProfiles.elite.length === 0 && packageProfiles.premium.length === 0
-                ? "PROFILES"
-                : "STANDARD PROFILES",
-              "Quality verified profiles"
+                ? "LOCAL INDEPENDENT SERVICE PROVIDERS"
+                : "LOCAL INDEPENDENT SERVICE PROVIDERS",
+              `Browse through ${area || location || county}'s diverse selection of independent escorts, masseuses, and models. All profiles are verified to ensure safe and genuine connections.`
             )}
           </>
+        )}
+
+            <div className="border-t border-border">
+            </div>
+
+
+        {/* Comprehensive SEO Content Section */}
+        {showContent && (
+          <div className="container mx-auto px-4 pt-10 max-w-7xl">
+            <div className="bg-white rounded-2xl py-8">
+              <div className="prose prose-lg max-w-none text-gray-700">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                  Find the Best Escorts, Call Girls & Adult Services in <span className="capitalize">{location || county}</span> 
+                </h2>
+
+                <p className="text-xl leading-relaxed mb-6">
+                  Welcome to Alchemyst's exclusive directory of premium adult entertainment in <strong className="capitalize">{location || county}</strong>.
+                  Whether you're looking for <strong>sexy escorts</strong>, <strong>professional masseuses</strong>,
+                  <strong> exclusive OF-models</strong>, or <strong>luxurious spas</strong>, we've curated the finest selection
+                  of verified service providers in the area.
+                </p>
+
+                <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
+                  Premium Adult Entertainment in <span className="capitalize">{location || county}</span> 
+                </h3>
+
+                <p className="leading-relaxed mb-6">
+                  <span className="capitalize">{location ? `${location}, ${county}` : county}</span>  is known for its vibrant nightlife and adult entertainment scene.
+                  Our platform connects you with <strong>verified independent models</strong>, <strong>professional escorts</strong>,
+                  and <strong>reputable spas</strong> who prioritize your satisfaction and discretion. Unlike other platforms,
+                  Alchemyst ensures all profiles are genuine with <strong>no hook-up fees</strong> and direct communication.
+                </p>
+
+                <div className="grid md:grid-cols-2 gap-8 my-8">
+                  <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                    <h4 className="text-xl font-semibold text-blue-900 mb-4 flex items-center gap-2">
+                      <GiCurlyMask />
+                       What to Expect in <span className="capitalize">{location || county}</span> 
+                       </h4>
+                    <ul className="space-y-3 text-blue-800">
+                      <li className="flex items-start gap-3">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong>Verified Profiles</strong> - All models and spas are thoroughly verified</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong>Direct Contact</strong> - No middlemen, communicate directly</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong>Complete Discretion</strong> - Your privacy is our priority</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong>Competitive Rates</strong> - Fair pricing with no hidden costs</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
+                    <h4 className="text-xl font-semibold text-purple-900 mb-4 flex items-center gap-2">
+                      <GiDualityMask />
+                       Popular Services
+                       </h4>
+                    <ul className="space-y-3 text-purple-800">
+                      <li className="flex items-start gap-3">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong>Escort Services</strong> - Premium companionship</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong>Therapeutic Massage</strong> - Professional bodywork</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong>Spa Experiences</strong> - Luxury adult entertainment</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong>OF-Model Content</strong> - Exclusive digital experiences</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
+                  How to Connect with {location || county} Service Providers
+                </h3>
+
+                <p className="leading-relaxed mb-6">
+                  Getting in touch with our verified escorts, masseuses, and spas in <strong className="capitalize">{location || county}</strong> is simple and straightforward.
+                  Browse through our carefully curated profiles, check availability, and contact directly via phone or WhatsApp.
+                  All our providers offer flexible scheduling for incalls and outcalls, ensuring you get the service you want when you want it.
+                </p>
+
+                <div className="bg-gradient-to-r from-primary to-purple-600 rounded-2xl p-8 text-white my-8">
+                  <h4 className="text-2xl font-bold mb-4 text-center">
+                    Join {location || county}'s Premier Adult Entertainment Community
+                  </h4>
+                  <p className="text-lg text-center mb-6 opacity-90">
+                    Whether you're a service provider looking to reach more clients in {location || county}&nbsp;
+                     or someone seeking premium adult entertainment, Alchemyst offers the perfect platform
+                    for discreet, professional connections.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      onClick={() => navigate('/signup')}
+                      className="px-8 py-3 bg-white text-primary font-bold rounded-lg hover:bg-gray-100 transition-all shadow-lg cursor-pointer"
+                    >
+                      Find Services in {location || county}
+                    </button>
+                    <button
+                      onClick={() => navigate('/signup?type=provider')}
+                      className="px-8 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-primary transition-all cursor-pointer"
+                    >
+                      List Your Services
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-8 p-6 bg-gray-100 rounded-lg border-l-4 border-primary">
+                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                     <LuSearchCheck />
+                     Popular Searches in {location || county}:
+                     </h4>
+                  <div className="flex flex-wrap gap-2 text-sm">
+                    <span className="bg-white px-3 py-1 rounded-full border">escorts {location || county}</span>
+                    <span className="bg-white px-3 py-1 rounded-full border">call girls {location || county}</span>
+                    <span className="bg-white px-3 py-1 rounded-full border">massage services {location || county}</span>
+                    <span className="bg-white px-3 py-1 rounded-full border">spas {location || county}</span>
+                    <span className="bg-white px-3 py-1 rounded-full border">of-models {location || county}</span>
+                    <span className="bg-white px-3 py-1 rounded-full border">adult entertainment {location || county}</span>
+                    <span className="bg-white px-3 py-1 rounded-full border">independent models {location || county}</span>
+                    <span className="bg-white px-3 py-1 rounded-full border">hookup {location || county}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
