@@ -14,6 +14,11 @@ import BackToTop from "./components/BackToTop"
 import ProfileDetailsPage from "./pages/profile/ProfileDetailsPage"
 import LocationPage from "./pages/location/LocationPage"
 import ScrollToTop from "./components/BackToTop";
+// Add these imports
+import BlogsPage from './pages/blog/BlogsPage';
+import BlogDetailsPage from './pages/blog/BlogDetailsPage';
+
+
 
 function App() {
   return (
@@ -34,8 +39,11 @@ function App() {
             <Route path="/location/:county" element={<LocationPage />} />
             <Route path="/location/:county/:location" element={<LocationPage />} />
             <Route path="/location/:county/:location/:area" element={<LocationPage />} />
-            
+
             <Route path="/profile/:userType/:userId" element={<ProfileDetailsPage />} />
+
+            <Route path="/blog" element={<BlogsPage />} />
+            <Route path="/blog/:id" element={<BlogDetailsPage />} />
           </Routes>
           <BackToTop />
           <Footer />
