@@ -299,163 +299,169 @@ export default function ProfileDetailsPage() {
   };
 
   // NEW: SEO-optimized content generator
-  const generateSEOCopy = () => {
-    if (!profile) return "";
+const generateSEOCopy = () => {
+  if (!profile) return "";
 
-    const { username, userType, location, age, services, bio, verification, currentPackage } = profile;
-    const county = location?.county || "Nairobi";
-    const area = location?.area?.[0] || location?.location || "the area";
-    const locationString = `${area}, ${county}`;
+  const { username, userType, location, age, services, bio, verification, currentPackage, providesEroticServices } = profile;
+  const county = location?.county || "Nairobi";
+  const area = location?.area?.[0] || location?.location || "the area";
+  const locationString = `${area}, ${county}`;
 
-    // Dynamic content based on user type and verification status
-    const serviceTypes = {
-      'escort': {
-        title: 'Escort',
-        keywords: ['escorts', 'call girls', 'companionship', 'dating', 'hookups', 'sexy girls', 'female escorts'],
-        description: 'premium escort services',
-        synonyms: ['companion', 'call girl', 'escort service']
-      },
-      'masseuse': {
-        title: 'Masseuse',
-        keywords: ['massage', 'bodywork', 'relaxation', 'therapeutic massage', 'erotic massage', 'sensual massage'],
-        description: 'professional massage services',
-        synonyms: ['massage therapist', 'bodywork specialist']
-      },
-      'of-model': {
-        title: 'OnlyFans Model',
-        keywords: ['OnlyFans', 'content creation', 'premium content', 'online modeling', 'adult content'],
-        description: 'exclusive OnlyFans content',
-        synonyms: ['content creator', 'online model']
-      },
-      'spa': {
-        title: 'Spa',
-        keywords: ['spa services', 'massage parlor', 'adult entertainment', 'relaxation center', 'wellness spa'],
-        description: 'luxurious spa and adult entertainment services',
-        synonyms: ['massage parlor', 'wellness center']
-      }
-    };
-
-    const serviceInfo = serviceTypes[userType] || {
-      title: 'Entertainment',
-      keywords: ['adult services', 'entertainment'],
-      description: 'premium adult entertainment services',
-      synonyms: ['service provider']
-    };
-
-    // Dynamic verification and trust indicators
-    const verificationBadges = [];
-    if (verification?.profileVerified) {
-      verificationBadges.push('Verified Profile');
+  // Base service definitions
+  const serviceTypes = {
+    escort: {
+      title: "Escort",
+      keywords: ["escorts", "call girls", "companionship", "dating", "hookups", "sexy girls", "female escorts"],
+      description: "premium escort services",
+      synonyms: ["companion", "call girl", "escort service"]
+    },
+    masseuse: {
+      title: "Masseuse",
+      keywords: providesEroticServices
+        ? ["massage", "bodywork", "relaxation", "therapeutic massage", "erotic massage", "sensual massage"]
+        : ["massage", "bodywork", "relaxation", "therapeutic massage", "deep tissue", "sports massage"],
+      description: providesEroticServices
+        ? "professional erotic and sensual massage services"
+        : "professional therapeutic and wellness massage services",
+      synonyms: providesEroticServices
+        ? ["massage therapist", "bodywork specialist", "sensual masseuse"]
+        : ["massage therapist", "wellness specialist", "spa masseuse"]
+    },
+    "of-model": {
+      title: "OnlyFans Model",
+      keywords: ["OnlyFans", "content creation", "premium content", "online modeling", "adult content"],
+      description: "exclusive OnlyFans content",
+      synonyms: ["content creator", "online model"]
+    },
+    spa: {
+      title: "Spa",
+      keywords: ["spa services", "massage parlor", "adult entertainment", "relaxation center", "wellness spa"],
+      description: "luxurious spa and wellness experiences",
+      synonyms: ["massage parlor", "wellness center"]
     }
-    if (verification?.backgroundCheck) {
-      verificationBadges.push('Background Verified');
-    }
-    if (currentPackage?.status === 'active') {
-      verificationBadges.push('Premium Member');
-    }
+  };
 
-    // Services list for SEO
-    const serviceList = services && services.length > 0
-      ? services.map(s => s.name).join(', ')
-      : 'customized adult services';
+  const serviceInfo = serviceTypes[userType] || {
+    title: "Entertainment",
+    keywords: ["adult services", "entertainment"],
+    description: "premium adult entertainment services",
+    synonyms: ["service provider"]
+  };
 
-    // Dynamic trust section based on actual verification status
-    const renderTrustIndicators = () => {
-      const indicators = [];
+  // Verification & trust badges
+  const verificationBadges = [];
+  if (verification?.profileVerified) verificationBadges.push("Verified Profile");
+  if (verification?.backgroundCheck) verificationBadges.push("Background Verified");
+  if (currentPackage?.status === "active") verificationBadges.push("Premium Member");
 
-      if (verification?.profileVerified) {
-        indicators.push(`
+  const serviceList = services?.length ? services.map(s => s.name).join(", ") : "customized services";
+
+  // Trust indicator rendering
+  const renderTrustIndicators = () => {
+    const list = [];
+
+    if (verification?.profileVerified)
+      list.push(`
         <li class="flex items-center gap-2">
-          <span class="w-2 h-2 bg-primary rounded-full"></span>
+          <span class="w-2 h-2 rounded-full ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}"></span>
           <span>Verified profile with complete background check</span>
         </li>
       `);
-      }
 
-      if (currentPackage?.status === 'active') {
-        indicators.push(`
+    if (currentPackage?.status === "active")
+      list.push(`
         <li class="flex items-center gap-2">
-          <span class="w-2 h-2 bg-primary rounded-full"></span>
-          <span>Premium ${userType} with the best services</span>
+          <span class="w-2 h-2 rounded-full ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}"></span>
+          <span>Premium ${userType} offering top-rated services</span>
         </li>
       `);
-      }
 
-      // Always include these basic trust indicators
-      indicators.push(`
+    list.push(`
       <li class="flex items-center gap-2">
-        <span class="w-2 h-2 bg-primary rounded-full"></span>
+        <span class="w-2 h-2 rounded-full ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}"></span>
         <span>Professional and discreet services in ${area}</span>
       </li>
     `);
 
-      indicators.push(`
+    list.push(`
       <li class="flex items-center gap-2">
-        <span class="w-2 h-2 bg-primary rounded-full"></span>
+        <span class="w-2 h-2 rounded-full ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}"></span>
         <span>Flexible scheduling for your convenience</span>
       </li>
     `);
 
-      return indicators.join('');
-    };
+    return list.join("");
+  };
 
-    return `
-    <div class="seo-content space-y-6 text-gray-700 leading-relaxed text-left">
-      <!-- Main Heading with Keywords -->
-      <h1 class="text-2xl font-bold text-gray-900 mb-4 capitalize">
-        ${username} - Premium ${serviceInfo.title} in ${locationString} | Alchemyst ${serviceInfo.title}s
-      </h1>
-      
-      <!-- Primary SEO Paragraph -->
-      <p class="text-lg">
-        Discover <strong>${username}</strong>, one of the sexiest ${serviceInfo.title.toLowerCase()}s in <strong>${area}, ${county}</strong>. 
-        ${age ? `This ${age}-year-old professional` : 'This professional'} offers exceptional ${serviceInfo.description} 
-        for clients seeking premium adult entertainment experiences. <br /><br />
-        ${bio ? bio + ' ' : `With her premium services, ${username} guarantees complete satisfaction and unforgettable encounters.`}
-      </p>
+  // Adjusted service section for masseuse profiles
+  const serviceParagraph =
+    userType === "masseuse"
+      ? providesEroticServices
+        ? `
+        <p class="text-lg">
+          <strong>${username}</strong> provides both <strong>therapeutic and sensual massage</strong> experiences, 
+          combining relaxation with intimacy in a professional and safe environment. 
+          Enjoy a personalized experience in ${locationString}, designed to meet your specific preferences 
+          while maintaining complete confidentiality.
+        </p>`
+        : `
+        <p class="text-lg">
+          <strong>${username}</strong> specializes in <strong>professional, non-erotic massage therapy</strong> 
+          focused on wellness, relaxation, and physical rejuvenation. 
+          Perfect for clients seeking deep tissue, Swedish, or sports massage sessions in ${locationString}.
+        </p>`
+      : `
+        <p class="text-lg">
+          Offering services in <strong>${serviceList}</strong>, ${username} provides customized experiences 
+          tailored to your specific desires. Whether you're looking for companionship, 
+          relaxation, or exclusive entertainment, you'll find satisfaction with this professional ${serviceInfo.title.toLowerCase()}.
+        </p>`;
 
-      <!-- Services Focus -->
-      <p class="text-lg">
-        Offering services in <strong>${serviceList}</strong>, ${username} provides customized experiences 
-        tailored to your specific desires. Whether you're looking for intimate companionship, 
-        therapeutic relaxation, or exclusive adult entertainment, you'll find exactly what you need 
-        with this professional ${serviceInfo.title.toLowerCase()}.
-      </p>
+  return `
+  <div class="seo-content space-y-6 text-gray-700 leading-relaxed text-left">
+    <h1 class="text-2xl font-bold text-gray-900 mb-4 capitalize">
+      ${username} – ${serviceInfo.title} in ${locationString} | Alchemyst ${serviceInfo.title}s
+    </h1>
 
-      <!-- Location Optimization -->
-      <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-4 capitalize">
-        Best ${serviceInfo.title} Services in ${county} - ${area} Area
-      </h2>
-      
-      <p>
-        Searching for <strong>${serviceInfo.keywords[0]} in ${area}</strong> or 
-        <strong> ${serviceInfo.synonyms[0]} in ${county}</strong>? ${username} stands out among 
-        ${serviceInfo.title.toLowerCase()}s in the area with professional service, complete discretion, 
-        and commitment to client satisfaction. ${area} is known for its vibrant adult entertainment scene, 
-        and ${username} represents the highest quality available in the region.
-      </p>
+    <p class="text-lg">
+      Meet <strong>${username}</strong>, a dedicated ${serviceInfo.title.toLowerCase()} based in 
+      <strong>${area}, ${county}</strong>. 
+      ${age ? `At ${age} years old,` : "This professional"} ${userType === "masseuse" && !providesEroticServices ? "offers therapeutic wellness sessions" : `provides ${serviceInfo.description}`} 
+      for clients seeking high-quality, confidential, and professional service.
+    </p>
 
-      <!-- Trust and Verification Section -->
-      <h3 class="text-xl font-semibold text-gray-900 mt-8 mb-4">
-        Why Choose ${username}?
-      </h3>
-      
-      <ul class="space-y-3 ml-4">
-        ${renderTrustIndicators()}
-        ${services && services.length > 0 ? `
+    ${bio ? `<p>${bio}</p>` : ""}
+
+    ${serviceParagraph}
+
+    <h2 class="text-xl font-semibold text-gray-900 mt-8 mb-4 capitalize">
+      Best ${serviceInfo.title} Services in ${county} – ${area} Area
+    </h2>
+
+    <p>
+      Searching for <strong>${serviceInfo.keywords[0]} in ${area}</strong> or 
+      <strong>${serviceInfo.synonyms[0]} in ${county}</strong>? 
+      ${username} stands out among local ${serviceInfo.title.toLowerCase()}s 
+      for professionalism, reliability, and client satisfaction. 
+      ${area} is known for quality wellness and entertainment services — and ${username} delivers the best experience possible.
+    </p>
+
+    <h3 class="text-xl font-semibold text-gray-900 mt-8 mb-4">Why Choose ${username}?</h3>
+    <ul class="space-y-3 ml-4">
+      ${renderTrustIndicators()}
+      ${services?.length ? `
         <li class="flex items-center gap-2">
-          <span class="w-2 h-2 bg-primary rounded-full"></span>
+          <span class="min-w-2 min-h-2 rounded-full ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}"></span>
           <span>Specialized services including ${serviceList}</span>
-        </li>
-        ` : ''}
-        <li class="flex items-center gap-2">
-          <span class="w-2 h-2 bg-primary rounded-full"></span>
-          <span>Competitive rates with transparent pricing</span>
-        </li>
-      </ul>
+        </li>` : ""}
+      <li class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}"></span>
+        <span>Competitive rates with transparent pricing</span>
+      </li>
+    </ul>
 
-      <!-- Call to Action with Keywords -->
-      <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border-l-4 border-primary mt-6">
+   <!-- Call to Action with Keywords -->
+      <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border-l-4 mt-6 ${profile.userType === "masseuse" ? "border-blue-500" : profile.userType === "of-model" ? "border-fuchsia-500" : "border-primary"}">
         <h4 class="font-semibold text-gray-900 mb-3 text-lg">
           Ready to Experience Premium ${serviceInfo.title} Services?
         </h4>
@@ -465,7 +471,7 @@ export default function ProfileDetailsPage() {
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <strong class="text-primary">Quick Contact Info:</strong>
+            <strong class="${profile.userType === "masseuse" ? "text-blue-600" : profile.userType === "of-model" ? "text-fuchsia-600" : "text-primary"}">Quick Contact Info:</strong>
             <div class="mt-2 space-y-3">
               ${profile.contact?.phoneNumber ? `<div className="flex items-center ">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" role="img" class="w-5 h-5 inline">
@@ -498,7 +504,7 @@ export default function ProfileDetailsPage() {
             </div>
           </div>
           <div>
-            <strong class="text-primary">Service Details:</strong>
+            <strong class="${profile.userType === "masseuse" ? "text-blue-600" : profile.userType === "of-model" ? "text-fuchsia-600" : "text-primary"}">Service Details:</strong>
             <div class="mt-2 space-y-3">
               ${age ? `<div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" role="img" class="w-5 h-5 inline">
@@ -533,18 +539,17 @@ export default function ProfileDetailsPage() {
         </div>
       </div>
 
-      <!-- Location-based SEO Keywords -->
-      <div class="mt-6 p-4 bg-gray-100 rounded-lg">
-        <p class="text-sm text-gray-600">
-          <strong>Popular Searches:</strong> ${serviceInfo.keywords.slice(0, 3).map(kw =>
-      `${kw} in ${area}, ${kw} in ${county}`).join(', ')} | 
-          sexy girls in ${county} | best ${serviceInfo.title.toLowerCase()}s ${locationString} | 
-          adult entertainment ${area}
-        </p>
-      </div>
+    <div class="mt-6 p-4 bg-gray-100 rounded-lg">
+      <p class="text-sm text-gray-600">
+        <strong>Popular Searches:</strong> 
+        ${serviceInfo.keywords.slice(0, 3).map(kw => `${kw} in ${area}, ${kw} in ${county}`).join(", ")} | 
+        best ${serviceInfo.title.toLowerCase()}s ${locationString} | 
+        ${providesEroticServices ? "sensual massage" : "wellness massage"} ${area}
+      </p>
     </div>
-  `;
-  };
+  </div>`;
+};
+
 
 
 
@@ -617,13 +622,14 @@ export default function ProfileDetailsPage() {
         <div className="container mx-auto max-w-7xl flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-white/80 hover:text-white transition-colors max-md:mr-2"
+            className="flex items-center gap-2 text-white/80 hover:text-white transition-colors max-md:mr-2 cursor-pointer"
           >
-            <FiArrowLeft size={20} className="border border-primary rounded-full ml-4 h-8 w-8 p-1" />
+            <FiArrowLeft size={20} className={`border rounded-full ml-4 h-8 w-8 p-1 ${profile.userType === "masseuse" ? "text-blue-500 bg-blue-500/10 border-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500 bg-fuchsia-500/10 border-fuchsia-500" : "text-primary bg-primary/10 border-primary"}`} />
             <span className="hidden sm:inline">Back</span>
           </button>
           <h1 className="text-white font-medium text-lg truncate max-w-xs sm:max-w-md capitalize max-md:flex max-md:flex-col">
-            <span className="text-primary font-bold">Alchemyst {profile.userType}s</span> <span className="max-md:hidden">&gt;&gt;</span> Hook up with {profile.username}
+            <span className={`font-bold ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>Alchemyst {profile.userType}s </span> 
+            <span className="max-md:hidden">&gt;&gt;</span> Hook up with {profile.username}
           </h1>
           <div className="w-10" /> {/* Spacer for centering */}
         </div>
@@ -646,7 +652,7 @@ export default function ProfileDetailsPage() {
                 {/* Username and Location */}
                 <div>
                   <h2 className="text-5xl font-bold text-neutral-900 mb-1 capitalize max-md:text-4xl">{profile.username}</h2>
-                  <h4 className="capitalize bg-primary/20 max-w-fit px-4 font-bold border border-primary rounded-lg text-primary my-2">
+                  <h4 className="capitalize max-w-fit px-4 font-bold border border-primary rounded-lg my-2">
                     {profile.userType}
                   </h4>
 
@@ -658,8 +664,8 @@ export default function ProfileDetailsPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-2 text-xl">
-                    Service Type: <div className="h-3 w-3  bg-blue-600 rounded-full"></div>
-                    <h4 className="text-xl text-blue-600 font-bold">{profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'men' ? 'Incalls Only' : 'Outcalls Only'}</h4>
+                    Service Type: <div className="h-3 w-3  bg-blue-500 rounded-full"></div>
+                    <h4 className="text-xl text-blue-500 font-bold">{profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'men' ? 'Incalls Only' : 'Outcalls Only'}</h4>
                   </div>
                 </div>
               </div>
@@ -722,8 +728,8 @@ export default function ProfileDetailsPage() {
               {/* Username and Location */}
               <div>
                 <h2 className="text-3xl font-bold text-neutral-900 mb-1 capitalize">{profile.username}</h2>
-                <h3 className="font-bold text-primary">{profile.age} Years Old</h3>
-                <h4 className="capitalize bg-primary/20 max-w-fit px-4 font-bold border border-primary rounded-lg text-primary my-2">
+                <h3 className={`font-bold ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>{profile.age} Years Old</h3>
+                <h4 className={`capitalize max-w-fit px-4 font-bold border rounded-lg my-2 ${profile.userType === "masseuse" ? "text-blue-500 bg-blue-500/10 border-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500 bg-fuchsia-500/10 border-fuchsia-500" : "text-primary bg-primary/10 border-primary"}`}>
                   {profile.userType}
                 </h4>
 
@@ -800,6 +806,38 @@ export default function ProfileDetailsPage() {
                   </div>
                 </div>
               )}
+
+              {/* Erotic Services Indicator */}
+              {profile?.userType === "masseuse" && (
+                <motion.div
+                  className={`mt-4 p-3 rounded-lg border text-sm flex items-center gap-2 ${profile?.providesEroticServices
+                      ? "border-rose-300 bg-rose-50 text-rose-700"
+                      : "border-emerald-300 bg-emerald-50 text-emerald-700"
+                    }`}
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {profile?.providesEroticServices ? (
+                    <>
+                      <FiHeart className="text-rose-500" size={40}/>
+                      <span>
+                        <strong>This masseuse provides erotic and sensual massage services as well.</strong>
+                        &nbsp;Please communicate your preferences respectfully.
+                      </span>
+                    </>
+                  ) : (
+                    <> 
+                      <FiUser className="text-emerald-500" size={40}/>
+                      <span>
+                        <strong>This masseuse offers professional, non-erotic massage services only.</strong>
+                        &nbsp;Kindly keep all interactions respectful.
+                      </span>
+                    </>
+                  )}
+                </motion.div>
+              )}
+
             </motion.div>
           )}
 
@@ -823,8 +861,8 @@ export default function ProfileDetailsPage() {
                 </div>
               ) : (
                 // --- REGULAR PROFILE DESCRIPTION (has bio) ---
-                <div className="bg-primary/10 p-5 rounded-lg border border-primary">
-                  <h3 className="text-lg font-bold text-neutral-900 mb-3 flex items-center gap-2">
+                <div className={`p-5 rounded-lg border ${profile.userType === "masseuse" ? "text-blue-500 bg-blue-500/10 border-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500 bg-fuchsia-500/10 border-fuchsia-500" : "text-primary bg-primary/10 border-primary"}`}>
+                  <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
                     <FiUser />
                     About Me
                   </h3>
@@ -835,8 +873,8 @@ export default function ProfileDetailsPage() {
               )
             ) : (
               // --- NO BIO AVAILABLE ---
-              <div className="bg-primary/10 p-5 rounded-lg border border-primary">
-                <h3 className="text-lg font-bold text-neutral-900 mb-3 flex items-center gap-2">
+              <div className={`p-5 rounded-lg border ${profile.userType === "masseuse" ? "text-blue-500 bg-blue-500/10 border-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500 bg-fuchsia-500/10 border-fuchsia-500" : "text-primary bg-primary/10 border-primary"}`}>
+                <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
                   <FiUser />
                   About Me
                 </h3>
@@ -850,9 +888,9 @@ export default function ProfileDetailsPage() {
                     </>
                   ) : (
                     <>
-                      Hi, I'm <span className="text-primary font-bold capitalize">{profile.username}</span>, a&nbsp;
-                      <span className="text-primary font-bold capitalize">{profile.userType}</span>&nbsp;
-                      based in <span className="text-primary font-bold capitalize">{profile.location?.location}</span>.&nbsp;
+                      Hi, I'm <span className={`font-bold capitalize ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>{profile.username}</span>, a&nbsp;
+                      <span className={`font-bold capitalize ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>{profile.userType}</span>&nbsp;
+                      based in <span className={`font-bold capitalize ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>{profile.location?.location}</span>.&nbsp;
                       I'm here to provide you with an unforgettable experience — let's connect and make amazing memories together!
                     </>
                   )}
@@ -861,7 +899,7 @@ export default function ProfileDetailsPage() {
             )}
 
 
-            <p className="my-2">To hook up with <span className="text-primary font-bold capitalize">{profile.username}</span> get in touch via the contact details below to arrange a meet-up.</p>
+            <p className="my-2">To hook up with <span className={`font-bold capitalize ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>{profile.username}</span> get in touch via the contact details below to arrange a meet-up.</p>
 
             {/* Phone Number with Copy */}
             {profile.contact?.phoneNumber && (
@@ -876,7 +914,7 @@ export default function ProfileDetailsPage() {
                   />
                   <button
                     onClick={handleCopyPhone}
-                    className="p-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all cursor-pointer"
+                    className={`p-3 text-white rounded-lg hover:bg-primary/90 transition-all cursor-pointer ${profile.userType === "masseuse" ? "text-blue-500 bg-blue-500 border-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500 bg-fuchsia-500 border-fuchsia-500" : "text-primary bg-primary border-primary"}`}
                   >
                     {copied ? <span className=" flex items-center gap-2">Copied <FiCheck size={20} /></span> : <span className=" flex items-center gap-2">Copy<FiCopy size={20} /></span>}
                   </button>
@@ -939,7 +977,7 @@ export default function ProfileDetailsPage() {
               className="mt-8"
             >
               <h2 className="text-4xl font-bold text-neutral-900 mb-6">
-                <span className="bg-[url('/graphic/scratch.png')] bg-contain bg-center bg-no-repeat text-white px-6 py-2">Services</span> Offered
+                <span className={`${profile.userType === "masseuse" ? "bg-[url('/graphic/scratch-massuse.png')]" : profile.userType === "of-model" ? "bg-[url('/graphic/scratch-of.png')]" : "bg-[url('/graphic/scratch.png')]"} bg-contain bg-center bg-no-repeat text-white px-6 py-2`}>Services</span> Offered
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {profile.services
@@ -966,7 +1004,7 @@ export default function ProfileDetailsPage() {
                         <p className="text-sm text-neutral-600 mb-3 line-clamp-2">{service.description}</p>
                       )}
                       <div className="flex items-center justify-between">
-                        <div className="text-primary font-bold text-lg">
+                        <div className={`font-bold text-lg ${profile.userType === "masseuse" ? "text-blue-600" : profile.userType === "of-model" ? "text-fuchsia-600" : "text-primary"}`}>
                           {service.contactForPrice ? (
                             <span className="">Contact for price</span>
                           ) : (
@@ -1027,7 +1065,7 @@ export default function ProfileDetailsPage() {
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-4xl font-bold text-neutral-900">
-                  Spas & Parlors in<span className="bg-[url('/graphic/scratch.png')] bg-contain bg-center bg-no-repeat text-white px-5 py-2">{profile.location?.area?.[0] || profile.location?.location}</span>
+                  Spas & Parlors in<span className={`${profile.userType === "masseuse" ? "bg-[url('/graphic/scratch-massuse.png')]" : profile.userType === "of-model" ? "bg-[url('/graphic/scratch-of.png')]" : "bg-[url('/graphic/scratch.png')]"} bg-contain bg-center bg-no-repeat text-white px-6 py-2`}>{profile.location?.area?.[0] || profile.location?.location}</span>
                 </h2>
                 <button
                   onClick={() => navigate(`/location/${profile.location?.county}?type=spa`)}
@@ -1077,7 +1115,7 @@ export default function ProfileDetailsPage() {
           >
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-4xl font-bold text-neutral-900">
-                Similar {profile.userType === 'spa' ? 'Profiles' : 'Profiles'} in <span className="bg-[url('/graphic/scratch.png')] bg-contain bg-center bg-no-repeat text-white px-5 py-2">{profile.location?.location}</span>
+                Similar {profile.userType === 'spa' ? 'Profiles' : 'Profiles'} in <span className={`${profile.userType === "masseuse" ? "bg-[url('/graphic/scratch-massuse.png')]" : profile.userType === "of-model" ? "bg-[url('/graphic/scratch-of.png')]" : "bg-[url('/graphic/scratch.png')]"} bg-contain bg-center bg-no-repeat text-white px-6 py-2`}>{profile.location?.location}</span>
               </h2>
               <button
                 onClick={() => navigate(`/location/${profile.location?.county}/${profile.location?.location}`)}
@@ -1137,13 +1175,13 @@ export default function ProfileDetailsPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
-                onClick={() => navigate('/signup')}
+                onClick={() => navigate('/register')}
                 className="px-8 py-3 bg-white text-primary font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Sign Up Free
               </button>
               <button
-                onClick={() => navigate('/signup')}
+                onClick={() => navigate('/register')}
                 className="px-8 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-primary transition-all duration-300"
               >
                 Learn More

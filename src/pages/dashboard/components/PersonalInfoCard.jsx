@@ -6,8 +6,8 @@ import toast from "react-hot-toast"
 
 // It's good practice to define constants for options
 const GENDER_OPTIONS = ["Female", "Male", "Trans", "Non-binary", "Other"]
-const ORIENTATION_OPTIONS = ["Straight", "Gay", "Bisexual", "Pansexual", "Asexual", "Queer", "Other"]
-const BREAST_SIZE_OPTIONS = ["Small Breasts", "Medium Breast", "Big Natural", "Extra Large", "No Breasts"]
+const ORIENTATION_OPTIONS = ["Straight", "Gay", "Bisexual", "Heterosexual", "Pansexual", "Asexual", "Queer", "Other"]
+const BREAST_SIZE_OPTIONS = ["Small Breasts", "Medium Natural Breast", "Big Natural", "Extra Large", "No Breasts"]
 const BODY_TYPE_OPTIONS = ["Petite", "Average", "Curvy", "Thick", "BBW", "Muscular"]
 const SERVES_WHO_OPTIONS = ["Men", "Women", "Both Men and Women", "Queer Only"]
 const ETHNICITY_OPTIONS = [
@@ -49,6 +49,7 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
   const [loading, setLoading] = useState(false)
   const [isProfileComplete, setIsProfileComplete] = useState(false)
   const isSpa = userData?.userType === "spa"
+  const isMassuse = userData?.userType === "masseuse"
 
   // Expanded formData state to include all the new fields
   const [formData, setFormData] = useState({
@@ -64,6 +65,7 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
     bodyType: userData?.bodyType || "",
     servesWho: userData?.servesWho || "",
     ethnicity: userData?.ethnicity || "",
+    providesEroticServices: userData?.providesEroticServices ?? false,
   })
 
   // This useEffect hook checks if the profile is complete whenever userData changes.
@@ -84,6 +86,7 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
       bodyType: userData?.bodyType || "",
       servesWho: userData?.servesWho || "",
       ethnicity: userData?.ethnicity || "",
+      providesEroticServices: userData?.providesEroticServices || false,
     })
   }, [userData, isSpa])
 
@@ -220,8 +223,8 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
                 value={formData.bio}
                 onChange={handleInputChange}
                 placeholder={`${isSpa ? "A preview of your spa. Keep it short and sweet.💋🍭" : "A preview of who you are. Keep it short and sweet.💋🍭"}`}
-                rows={isSpa ? 10 : 3}
-                maxLength={isSpa ? 500 : 200}
+                rows={isSpa ? 10 : 5}
+                maxLength={isSpa ? 500 : 400}
                 className="w-full px-4 py-2.5 bg-bg-primary border border-border-light rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
                 disabled={loading}
               />
@@ -230,7 +233,7 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
                   This helps clients get to know you better
                 </p>
                 <p className={`text-xs ${getBioCharacterColor()}`}>
-                  {getBioCharacterCount()}/{isSpa ? 500 : 200}
+                  {getBioCharacterCount()}/{isSpa ? 500 : 400}
                 </p>
               </div>
             </div>
@@ -320,7 +323,7 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
 
 
             {/* Breast Size */}
-            {!isSpa &&
+            {!isSpa && !isMassuse &&
               <div>
                 <label className="block text-sm font-medium text-text-primary mb-2">Breast Size</label>
                 <select
@@ -337,7 +340,7 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
             }
 
             {/* Body Type */}
-            {!isSpa &&
+            {!isSpa && !isMassuse &&
               <div>
                 <label className="block text-sm font-medium text-text-primary mb-2">Body Type</label>
                 <select
@@ -386,6 +389,41 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
                 </select>
               </div>
             }
+
+            {/* Erotica */}
+            {/* Erotic Services */}
+            {isMassuse && (
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Do you provide erotic services as well? (e.g., happy ending)
+                </label>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 text-sm text-text-primary">
+                    <input
+                      type="radio"
+                      name="providesEroticServices"
+                      value="true"
+                      checked={formData.providesEroticServices === true}
+                      onChange={() => setFormData(prev => ({ ...prev, providesEroticServices: true }))}
+                      disabled={loading}
+                    />
+                    Yes
+                  </label>
+                  <label className="flex items-center gap-2 text-sm text-text-primary">
+                    <input
+                      type="radio"
+                      name="providesEroticServices"
+                      value="false"
+                      checked={formData.providesEroticServices === false}
+                      onChange={() => setFormData(prev => ({ ...prev, providesEroticServices: false }))}
+                      disabled={loading}
+                    />
+                    No
+                  </label>
+                </div>
+              </div>
+            )}
+
           </>
         ) : (
           isSpa ?
@@ -394,20 +432,37 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
               {renderField("About (Bio)", formData.bio, true)}
               {renderField("Service Type", formData.serviceType)}
             </>
-            : <>
-              {renderField("Username", formData.username)}
-              {renderField("About Me", formData.bio, true)}
-              {renderField("Age", formData.age)}
-              {renderField("Nationality", formData.nationality)}
-              {renderField("Gender", formData.gender)}
-              {renderField("Sexual Orientation", formData.sexualOrientation)}
-              {renderField("Service Type", formData.serviceType)}
-              {renderField("Breast Size", formData.breastSize)}
-              {renderField("Body Type", formData.bodyType)}
-              {renderField("I Serve", formData.servesWho)}
-              {renderField("Ethnicity", formData.ethnicity)}
-              {renderField("Service Type", formData.serviceType)}
-            </>
+            :
+            isMassuse ?
+              <>
+                {renderField("Username", formData.username)}
+                {renderField("About Me", formData.bio, true)}
+                {renderField("Age", formData.age)}
+                {renderField("Nationality", formData.nationality)}
+                {renderField("Gender", formData.gender)}
+                {renderField("Sexual Orientation", formData.sexualOrientation)}
+                {renderField("Service Type", formData.serviceType)}
+                {renderField("I Serve", formData.servesWho)}
+                {renderField("Ethnicity", formData.ethnicity)}
+                {renderField("Service Type", formData.serviceType)}
+                {renderField("Provides Erotic Services", formData.providesEroticServices ? "Yes" : "No")}
+                {console.log(`formData.providesEroticServices`, formData.providesEroticServices)}
+              </>
+              :
+              <>
+                {renderField("Username", formData.username)}
+                {renderField("About Me", formData.bio, true)}
+                {renderField("Age", formData.age)}
+                {renderField("Nationality", formData.nationality)}
+                {renderField("Gender", formData.gender)}
+                {renderField("Sexual Orientation", formData.sexualOrientation)}
+                {renderField("Service Type", formData.serviceType)}
+                {renderField("Breast Size", formData.breastSize)}
+                {renderField("Body Type", formData.bodyType)}
+                {renderField("I Serve", formData.servesWho)}
+                {renderField("Ethnicity", formData.ethnicity)}
+                {renderField("Service Type", formData.serviceType)}
+              </>
         )}
 
         {/* Action Buttons */}

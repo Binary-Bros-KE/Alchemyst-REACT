@@ -53,6 +53,26 @@
             "Teso South"
         ]
     },
+      {
+        "name": "Eldoret",
+        "capital": "Eldoret",
+        "code": 27,
+        "sub_counties": [
+            "Eldoret Town",
+            "Annex",
+            "Kapsoiya",
+            "Pioneer",
+            "West Indies",
+            "Elgon View",
+            "Langas",
+            "Ainabkoi",
+            "Kapseret",
+            "Kesses",
+            "Moiben",
+            "Soy",
+            "Turbo"
+        ]
+    },
     {
         "name": "Elgeyo-Marakwet",
         "capital": "Iten",
@@ -678,26 +698,7 @@
             "Turkana south"
         ]
     },
-    {
-        "name": "Uasin Gishu",
-        "capital": "Eldoret",
-        "code": 27,
-        "sub_counties": [
-            "Eldoret Town",
-            "Annex",
-            "Kapsoiya",
-            "Pioneer",
-            "West Indies",
-            "Elgon View",
-            "Langas",
-            "Ainabkoi",
-            "Kapseret",
-            "Kesses",
-            "Moiben",
-            "Soy",
-            "Turbo"
-        ]
-    },
+
     {
         "name": "Vihiga",
         "capital": "Vihiga",

@@ -542,13 +542,13 @@ export default function Home() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={() => navigate('/signup')}
+                  onClick={() => navigate('/register')}
                   className="px-8 py-3 bg-white text-primary font-bold rounded-lg hover:bg-gray-100 transition-all shadow-lg cursor-pointer"
                 >
                   Sign Up as Client
                 </button>
                 <button
-                  onClick={() => navigate('/signup?type=provider')}
+                  onClick={() => navigate('/register')}
                   className="px-8 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-primary transition-all cursor-pointer"
                 >
                   Join as Provider

@@ -137,7 +137,7 @@ export default function ProfileCard({ profile }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="relative bg-card rounded-lg overflow-hidden shadow-lg cursor-pointer group border border-primary/20"
+      className={`relative bg-card rounded-lg overflow-hidden shadow-lg cursor-pointer group border ${profile.userType === "masseuse" ? "border-blue-500/20" : profile.userType === "of-model" ? "border-fuchsia-500/20" : "border-primary/20"}`}
       onClick={handleViewProfile}
       onMouseEnter={() => setShowBio(true)}
       onMouseLeave={() => setShowBio(false)}
@@ -162,21 +162,27 @@ export default function ProfileCard({ profile }) {
             ) : (
               <p className="text-white/70 text-sm mb-4 italic">No bio available</p>
             )}
-            <button className="px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-all cursor-pointer max-md:text-sm">
+            <button className={`px-4 py-2 text-white rounded-lg font-medium transition-all cursor-pointer max-md:text-sm ${profile.userType === "masseuse" ? "bg-blue-500 hover:bg-blue-500/90" : profile.userType === "of-model" ? "bg-fuchsia-500 hover:bg-fuchsia-500/90" : "bg-primary hover:bg-primary/90"}`}>
               View Full Profile
             </button>
           </motion.div>
         )}
+
+        <div className={`absolute bottom-2 right-2 px-2 rounded-lg text-sm capitalize text-white font-medium ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}`}>
+          {profile.userType}
+        </div>
       </div>
 
       <div className="bg-white p-3 space-y-2 max-md:p-2">
-        <h3 className="font-bold text-primary capitalize truncate text-md">{profile.username} ({profile.age} yrs)</h3>
+        <h3 className={`font-bold capitalize truncate text-md ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>
+          {profile.username} ({profile.age} yrs)
+          </h3>
         <p className="text-md text-muted-foreground truncate flex items-center gap-1">
           <BiLocationPlus size={12} />
           {profile.location?.county}, {profile.location?.location}
         </p>
-        <p className="text-xs text-blue-600/50 font-bold flex items-center gap-2">
-          <div className="h-2 w-2 bg-blue-600/50 rounded-full"></div> {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'men' ? 'Incalls Only' : 'Outcalls Only'}
+        <p className="text-xs text-blue-500/50 font-bold flex items-center gap-2">
+          <div className="h-2 w-2 bg-blue-500/50 rounded-full"></div> {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'men' ? 'Incalls Only' : 'Outcalls Only'}
         </p>
 
         {profile.contact?.phoneNumber && (

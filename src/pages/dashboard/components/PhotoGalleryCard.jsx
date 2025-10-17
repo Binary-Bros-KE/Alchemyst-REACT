@@ -23,8 +23,45 @@ export default function PhotoGalleryCard({ userData, updateUserData }) {
   const [uploading, setUploading] = useState(false)
   const [deleting, setDeleting] = useState(null)
 
-  const isPremiumPackage = userData?.currentPackage && (userData?.currentPackage?.packageType === "premium" || userData?.currentPackage?.packageType === "elite");
-  const MAX_SECONDARY_IMAGES = userData.userType === "spa" ? isPremiumPackage ? 10 : 5 : 2
+  // safe handling of package + status
+  const pkg = userData?.currentPackage ?? null;
+  const pkgType = pkg?.packageType ?? null;
+  const pkgStatus = pkg?.status ?? null;
+  const hasActivePackage = pkg && pkgType && pkgStatus === "active";
+
+  // tweak these base values if you want different defaults
+  const DEFAULT_SPA = 5;
+  const PREMIUM_SPA = 10;
+
+  const DEFAULT_NON_SPA = 2;
+  const PREMIUM_NON_SPA = 5;
+  const BASIC_NON_SPA = 4; // interpreted as "2 extra images for basic" => 2 + 2 = 4
+
+  let MAX_SECONDARY_IMAGES = DEFAULT_NON_SPA; // fallback
+
+  if (userData?.userType === "spa") {
+    // SPA rules
+    if (!hasActivePackage) {
+      MAX_SECONDARY_IMAGES = DEFAULT_SPA;
+    } else if (pkgType === "premium" || pkgType === "elite") {
+      MAX_SECONDARY_IMAGES = PREMIUM_SPA;
+    } else {
+      // basic or other defined packageType
+      MAX_SECONDARY_IMAGES = DEFAULT_SPA;
+    }
+  } else {
+    // Non-spa rules
+    if (!hasActivePackage) {
+      MAX_SECONDARY_IMAGES = DEFAULT_NON_SPA;
+    } else if (pkgType === "premium" || pkgType === "elite") {
+      MAX_SECONDARY_IMAGES = PREMIUM_NON_SPA;
+    } else if (pkgType === "basic") {
+      MAX_SECONDARY_IMAGES = BASIC_NON_SPA;
+    } else {
+      MAX_SECONDARY_IMAGES = DEFAULT_NON_SPA;
+    }
+  }
+
 
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,

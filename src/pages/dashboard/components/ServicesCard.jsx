@@ -28,6 +28,21 @@ const COMMON_SERVICES = [
   "Sex Toys",
 ]
 
+const MASSAGE_SERVICES = [
+  "Swedish Massage",
+  "Deep Tissue Massage",
+  "Aromatherapy Massage",
+  "Thai Massage",
+  "Hot Stone Massage",
+  "Reflexology",
+  "Sports Massage",
+  "Prenatal Massage",
+  "Couples Massage",
+  "Head and Neck Massage",
+  "Body to Body Massage",
+]
+
+
 const PRICING_UNITS = ["Per Hour", "Per Service", "Per Night", "Per Day", "Per Session", "Per Week", "Per Month", "Per Video"]
 
 const MAX_DESCRIPTION_LENGTH = 200
@@ -42,6 +57,20 @@ export default function ServicesCard({ userData, updateUserData }) {
   const [serviceImages, setServiceImages] = useState({}) // For spa service images
   const [imagePreviews, setImagePreviews] = useState({}) // For image previews
   const [customServiceName, setCustomServiceName] = useState("") // Added custom service input state
+
+  // decide service options correctly
+  const serviceOptions = (() => {
+    const type = userData?.userType;
+    const providesErotic = Boolean(userData?.providesEroticServices);
+
+    if (type === "masseuse") {
+      return providesErotic ? COMMON_SERVICES : MASSAGE_SERVICES;
+    }
+
+    // default for all other user types (escorts, spa, of-model, etc.)
+    return COMMON_SERVICES;
+  })();
+
 
   const openModal = (service = null) => {
     if (service) {
@@ -658,7 +687,7 @@ export default function ServicesCard({ userData, updateUserData }) {
                       Select services to add (you can select multiple)
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {COMMON_SERVICES.map((service) => {
+                      {serviceOptions.map((service) => {
                         const isSelected = selectedServices.some((s) => s.name === service)
                         return (
                           <button
