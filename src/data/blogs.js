@@ -191,7 +191,7 @@ If you're curious about dipping your toes in, like I did, check out Alchemyst. I
         author: 'Wellness Explorer',
         publishDate: '2024-01-10',
         readTime: '6 min read',
-        featuredSpas: ['spa123', 'spa456', 'spa789', 'spa101', 'spa112'],
+        featuredSpas: ['68ee50bc7b6676bbe92bc814', '68ee8b04e7ecaf32b9a2ba8f', '68ee9b39609154982346ecb2', 'spa101', 'spa112'],
         introduction: `Westlands has become Nairobi's premier destination for luxury wellness experiences. After visiting over 20 establishments, I've curated the top 5 spas that truly deliver exceptional service, ambiance, and results. Whether you're looking for a quick massage or a full day of pampering, these spots won't disappoint.`,
         conclusion: `Each of these spas offers something unique, but they all share a commitment to quality and customer satisfaction. Remember to book in advance, especially for weekend appointments, and don't be afraid to communicate your preferences to the therapists.`
     },
