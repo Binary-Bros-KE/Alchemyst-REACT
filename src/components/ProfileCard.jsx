@@ -181,9 +181,9 @@ export default function ProfileCard({ profile }) {
           <BiLocationPlus size={12} />
           {profile.location?.county}, {profile.location?.location}
         </p>
-        <p className="text-xs text-blue-500/50 font-bold flex items-center gap-2">
+        <div className="text-xs text-blue-500/50 font-bold flex items-center gap-2">
           <div className="h-2 w-2 bg-blue-500/50 rounded-full"></div> {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'men' ? 'Incalls Only' : 'Outcalls Only'}
-        </p>
+        </div>
 
         {profile.contact?.phoneNumber && (
           <div className="flex items-center gap-2 max-w-full">
