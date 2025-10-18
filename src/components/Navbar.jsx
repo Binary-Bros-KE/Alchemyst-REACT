@@ -2,6 +2,8 @@
 import { useEffect, useState, useRef } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
+import { clearFilters, setSelectedCounty } from "../redux/uiSlice"
+import { useDispatch } from "react-redux"
 
 // --- SVG Icons to remove react-icons dependency ---
 const MenuIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>;
@@ -16,6 +18,7 @@ export default function Navbar() {
   const dropdownRef = useRef(null)
   const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   // Monkey-patch localStorage.setItem to emit a custom event
   const originalSetItem = localStorage.setItem;
@@ -86,7 +89,7 @@ export default function Navbar() {
     { href: "/", label: "Home" },
     { href: "/?userType=escort", label: "Escorts" },
     { href: "/?serviceType=massage", label: "Massage" },
-    { href: "/?userType=OFModel", label: "OF Models" },
+    { href: "/?userType=of-model", label: "OF Models" }, // Changed from OFModel to of-model
     { href: "/?userType=spa", label: "Erotic Spas" },
     { href: "/blog", label: "Blog" },
   ];
@@ -95,10 +98,14 @@ export default function Navbar() {
     <Link
       key={link.href}
       to={link.href}
-      onClick={() => setMobileMenuOpen(false)}
+      onClick={() => {
+        setMobileMenuOpen(false)
+        dispatch(clearFilters())
+        dispatch(setSelectedCounty('all'))
+      }}
       className={`transition-colors ${isMobile
-          ? `text-4xl font-bold text-text-inverse hover:text-primary ${location.pathname === link.href ? "text-primary" : ""}`
-          : `text-text-inverse/80 hover:text-primary ${location.pathname === link.href ? "text-primary font-medium" : ""}`
+        ? `text-4xl font-bold text-text-inverse hover:text-primary ${location.pathname === link.href ? "text-primary" : ""}`
+        : `text-text-inverse/80 hover:text-primary ${location.pathname === link.href ? "text-primary font-medium" : ""}`
         }`}
     >
       {link.label}

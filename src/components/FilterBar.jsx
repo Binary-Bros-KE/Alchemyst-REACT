@@ -31,7 +31,7 @@ const BODY_TYPE_OPTIONS = ["Petite", "Average", "Curvy", "Thick", "BBW", "Muscul
 const BREAST_SIZE_OPTIONS = ["Small Breasts", "Medium Breast", "Big Natural", "Extra Large", "No Breasts"]
 const SERVES_WHO_OPTIONS = ["Men", "Women", "Both Men and Women", "Queer Only"]
 const ETHNICITY_OPTIONS = ["Black", "White", "Mixed", "Somali", "Arabic", "Hindi", "Other"]
-const ORIENTATION_OPTIONS = ["Straight", "Gay", "Bisexual", "Pansexual", "Asexual", "Queer", "Other"]
+const ORIENTATION_OPTIONS = ["Straight", "Gay", "Bisexual", "Heterosexual", "Pansexual", "Asexual", "Queer", "Other"]
 
 export default function FilterBar({ filters, onFilterChange }) {
   const [showFilters, setShowFilters] = useState(false)
@@ -48,7 +48,7 @@ export default function FilterBar({ filters, onFilterChange }) {
     // Apply the filters and scroll to results
     onFilterChange(filters, true)
     setShowApplyButton(false)
-    
+
     // Scroll to results section
     setTimeout(() => {
       const resultsSection = document.getElementById('profiles-results')
@@ -59,29 +59,37 @@ export default function FilterBar({ filters, onFilterChange }) {
   }
 
   const handleAgeChange = (type, value) => {
-    const newAgeRange = { ...filters.ageRange }
+  const newAgeRange = { ...filters.ageRange }
+  
+  if (type === 'min') {
+    // Ensure minimum age is at least 18
+    const minValue = Math.max(18, parseInt(value) || 18)
+    newAgeRange.min = minValue
     
-    if (type === 'min') {
-      newAgeRange.min = Math.max(18, parseInt(value) || 18)
-      if (newAgeRange.max && newAgeRange.min > newAgeRange.max) {
-        newAgeRange.max = newAgeRange.min
-      }
-    } else {
-      newAgeRange.max = parseInt(value) || null
-      if (newAgeRange.max && newAgeRange.max < (newAgeRange.min || 18)) {
-        newAgeRange.min = newAgeRange.max
-      }
+    // Only adjust max if it exists AND is less than the new min
+    if (newAgeRange.max !== null && newAgeRange.max < minValue) {
+      newAgeRange.max = minValue
     }
+  } else {
+    // For max age
+    const maxValue = value === '' ? null : parseInt(value)
     
-    setShowApplyButton(true)
-    onFilterChange({ ...filters, ageRange: newAgeRange }, false)
+    if (maxValue === null) {
+      newAgeRange.max = null
+    } else {
+      // Ensure max is at least 18 and at least equal to min
+      newAgeRange.max = Math.max(newAgeRange.min || 18, maxValue)
+    }
   }
-
+  
+  setShowApplyButton(true)
+  onFilterChange({ ...filters, ageRange: newAgeRange }, false)
+}
   const clearFilters = () => {
-    onFilterChange({ 
-      userType: "all", 
-      gender: "all", 
-      bodyType: "all", 
+    onFilterChange({
+      userType: "all",
+      gender: "all",
+      bodyType: "all",
       breastSize: "all",
       serviceType: "all",
       sexualOrientation: "all",
@@ -141,6 +149,12 @@ export default function FilterBar({ filters, onFilterChange }) {
                   max={filters.ageRange?.max || 99}
                   value={filters.ageRange?.min || 18}
                   onChange={(e) => handleAgeChange('min', e.target.value)}
+                  onBlur={(e) => {
+                    // Force minimum of 18 on blur
+                    if (parseInt(e.target.value) < 18) {
+                      handleAgeChange('min', '18')
+                    }
+                  }}
                   className="w-full px-3 py-2 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>

@@ -182,7 +182,7 @@ export default function ProfileCard({ profile }) {
           {profile.location?.county}, {profile.location?.location}
         </p>
         <div className="text-xs text-blue-500/50 font-bold flex items-center gap-2">
-          <div className="h-2 w-2 bg-blue-500/50 rounded-full"></div> {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'men' ? 'Incalls Only' : 'Outcalls Only'}
+          <div className="h-2 w-2 bg-blue-500/50 rounded-full"></div> {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'incall' ? 'Incalls Only' : 'Outcalls Only'}
         </div>
 
         {profile.contact?.phoneNumber && (

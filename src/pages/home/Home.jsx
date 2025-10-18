@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { FiSearch, FiMapPin, FiRefreshCw } from "react-icons/fi"
 
+
 import { useProfiles } from "../../hooks/useProfiles"
 import locationsData from "../../data/counties.json"
 import ProfileCard from "../../components/ProfileCard"
@@ -14,6 +15,13 @@ import PopularAreas from "./components/PopularAreas"
 import FilterBar from "../../components/FilterBar"
 import { GiCurlyMask, GiDualityMask } from "react-icons/gi"
 import { LuSearchCheck } from "react-icons/lu"
+
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation, Autoplay, FreeMode } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/autoplay"
+import './style.css'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -36,6 +44,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
   const [suggestions, setSuggestions] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false)
+
 
   // Enhanced search suggestions with better matching
   const handleSearchChange = (value) => {
@@ -163,6 +172,30 @@ export default function Home() {
     setSearchQuery("")
   }
 
+  // Helper to check if any spa-relevant filters are active
+  const hasSpaFilters = () => {
+    return (
+      (filters.serviceType && filters.serviceType !== 'all') ||
+      (filters.specificService && filters.specificService !== 'all')
+    )
+  }
+
+  // Helper to check if any filters are active (excluding min age 18)
+  const hasActiveFilters = () => {
+    return (
+      (filters.userType && filters.userType !== 'all') ||
+      (filters.gender && filters.gender !== 'all') ||
+      (filters.bodyType && filters.bodyType !== 'all') ||
+      (filters.breastSize && filters.breastSize !== 'all') ||
+      (filters.serviceType && filters.serviceType !== 'all') ||
+      (filters.sexualOrientation && filters.sexualOrientation !== 'all') ||
+      (filters.ethnicity && filters.ethnicity !== 'all') ||
+      (filters.servesWho && filters.servesWho !== 'all') ||
+      (filters.specificService && filters.specificService !== 'all') ||
+      (filters.ageRange?.max !== null) // Only check max age, not min
+    )
+  }
+
   const handleSearchSubmit = () => {
     if (!searchQuery.trim()) return
 
@@ -232,10 +265,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="bg-gradient-to-b from-neutral-900 to-background py-16 px-4">
+      <div className="bg-gradient-to-b from-neutral-900 to-background py-16 px-4 max-md:py-10">
         <div className="container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4">
-            <h1 className="text-4xl md:text-5xl font-bold text-text-inverse mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-text-inverse mb-4 max-md:flex max-md:flex-col">
               Home of
               <span className="bg-[url('/graphic/scratch.png')] bg-cover bg-center bg-no-repeat py-2 px-2"> independent </span>
               escorts
@@ -248,7 +281,7 @@ export default function Home() {
           <div className="bg-card rounded-2xl p-6 shadow-xl">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">
-                <div className="flex gap-2">
+                <div className="flex max-md:flex-col gap-2">
                   <select
                     value={selectedCounty}
                     onChange={(e) => {
@@ -257,7 +290,7 @@ export default function Home() {
                       setSuggestions([])
                       setShowSuggestions(false)
                     }}
-                    className="px-4 py-3 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="max-md:w-full max-md:mb-2 px-4 py-3 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="all">All Counties</option>
                     {locationsData.map((county) => (
@@ -309,7 +342,7 @@ export default function Home() {
 
               <button
                 onClick={handleSearchSubmit}
-                disabled={!searchQuery.trim()}
+                // disabled={!searchQuery.trim()}
                 className="px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FiSearch />
@@ -382,10 +415,12 @@ export default function Home() {
 
 
         {/* Spas Section */}
+        {console.log(filters.userType === 'all' || filters.userType === 'spa')}
+        {/* Spas Section */}
         {spas.length > 0 && (filters.userType === 'all' || filters.userType === 'spa') && (
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-foreground">Featured Spas & Businesses</h2>
+              <h2 className="text-2xl font-bold text-foreground">Featured Spas & Parlors</h2>
               <button
                 onClick={() => navigate(`/location/${selectedCounty}?type=spa`)}
                 className="text-primary hover:text-primary/80 font-medium"
@@ -393,11 +428,44 @@ export default function Home() {
                 See all →
               </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {spas.slice(0, 4).map((spa) => (
-                <SpaCard key={spa._id} profile={spa} />
-              ))}
-            </div>
+
+            {/* Show carousel when no spa-relevant filters, grid when filters active */}
+            {hasSpaFilters() ? (
+              // Grid view when filters are active
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {spas.map((spa) => (
+                  <SpaCard key={spa._id} profile={spa} />
+                ))}
+              </div>
+            ) : (
+              // Carousel view when no filters
+              <Swiper
+                modules={[Navigation, Autoplay, FreeMode]}
+                spaceBetween={20}
+                slidesPerView={1}
+                navigation
+                autoplay={{
+                  delay: 1500,
+                  disableOnInteraction: false,
+                  pauseOnMouseEnter: true,
+                }}
+                loop={spas.length > 3}
+                freeMode={true}
+                grabCursor={true}
+                breakpoints={{
+                  640: { slidesPerView: 1 },
+                  768: { slidesPerView: 2 },
+                  1024: { slidesPerView: 3 },
+                }}
+                className="spas-carousel"
+              >
+                {spas.map((spa) => (
+                  <SwiperSlide key={spa._id}>
+                    <SpaCard profile={spa} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
           </div>
         )}
         {/* Profiles Section */}

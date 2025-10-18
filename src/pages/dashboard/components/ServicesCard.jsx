@@ -63,7 +63,7 @@ export default function ServicesCard({ userData, updateUserData }) {
     const type = userData?.userType;
     const providesErotic = Boolean(userData?.providesEroticServices);
 
-    if (type === "masseuse") {
+    if (type === "masseuse" || type === "spa") {
       return providesErotic ? COMMON_SERVICES : MASSAGE_SERVICES;
     }
 

@@ -42,92 +42,79 @@ const profilesSlice = createSlice({
   },
   reducers: {
     // Apply filters to allProfiles (INSTANT - no API call)
-    // In your profilesSlice.js - update the applyFilters reducer
     applyFilters: (state, action) => {
       const filters = action.payload
       let filtered = state.allProfiles
 
-      // Apply userType filter
+      // Apply userType filter FIRST
       if (filters.userType && filters.userType !== "all") {
         filtered = filtered.filter(profile => profile.userType === filters.userType)
       }
 
-      // Apply gender filter - CORRECTED: matches model's gender field
-      if (filters.gender && filters.gender !== "all") {
-        filtered = filtered.filter(profile =>
-          profile.gender?.toLowerCase() === filters.gender.toLowerCase()
-        )
-      }
+      // Now apply profile-specific filters (check each profile individually)
+      filtered = filtered.filter(profile => {
+        const isSpa = profile.userType === 'spa' // ✅ Check EACH profile
 
-      // Apply bodyType filter - CORRECTED: matches model's bodyType field
-      if (filters.bodyType && filters.bodyType !== "all") {
-        filtered = filtered.filter(profile =>
-          profile.bodyType?.toLowerCase() === filters.bodyType.toLowerCase()
-        )
-      }
+        // Gender filter - skip for spas
+        if (filters.gender && filters.gender !== "all") {
+          if (profile.gender?.toLowerCase() !== filters.gender.toLowerCase()) return false
+        }
 
-      // Apply breastSize filter - CORRECTED: matches model's breastSize field
-      if (filters.breastSize && filters.breastSize !== "all") {
-        filtered = filtered.filter(profile =>
-          profile.breastSize?.toLowerCase() === filters.breastSize.toLowerCase()
-        )
-      }
+        // Body Type filter - skip for spas
+        if (filters.bodyType && filters.bodyType !== "all") {
+          if (profile.bodyType?.toLowerCase() !== filters.bodyType.toLowerCase()) return false
+        }
 
-      // Apply serviceType filter - CORRECTED: matches model's serviceType field
-      if (filters.serviceType && filters.serviceType !== "all") {
-        filtered = filtered.filter(profile =>
-          profile.serviceType?.toLowerCase() === filters.serviceType.toLowerCase()
-        )
-      }
+        // Breast Size filter - skip for spas
+        if (filters.breastSize && filters.breastSize !== "all") {
+          if (profile.breastSize?.toLowerCase() !== filters.breastSize.toLowerCase()) return false
+        }
 
-      // Apply servesWho filter - CORRECTED: matches model's servesWho field
-      if (filters.servesWho && filters.servesWho !== "all") {
-        filtered = filtered.filter(profile =>
-          profile.servesWho?.toLowerCase() === filters.servesWho.toLowerCase()
-        )
-      }
+        // Serves Who filter - skip for spas
+        if (filters.servesWho && filters.servesWho !== "all") {
+          if (profile.servesWho?.toLowerCase() !== filters.servesWho.toLowerCase()) return false
+        }
 
-      // Apply sexualOrientation filter - CORRECTED: matches model's sexualOrientation field
-      if (filters.sexualOrientation && filters.sexualOrientation !== "all") {
-        filtered = filtered.filter(profile =>
-          profile.sexualOrientation?.toLowerCase() === filters.sexualOrientation.toLowerCase()
-        )
-      }
+        // Sexual Orientation filter - skip for spas
+        if (filters.sexualOrientation && filters.sexualOrientation !== "all") {
+          if (profile.sexualOrientation?.toLowerCase() !== filters.sexualOrientation.toLowerCase()) return false
+        }
 
-      // Apply ethnicity filter - CORRECTED: matches model's ethnicity field
-      if (filters.ethnicity && filters.ethnicity !== "all") {
-        filtered = filtered.filter(profile =>
-          profile.ethnicity?.toLowerCase() === filters.ethnicity.toLowerCase()
-        )
-      }
+        // Ethnicity filter - skip for spas
+        if (filters.ethnicity && filters.ethnicity !== "all") {
+          if (profile.ethnicity?.toLowerCase() !== filters.ethnicity.toLowerCase()) return false
+        }
 
-      // Apply specific service filter - NEW: search in services array
-      if (filters.specificService && filters.specificService !== "all") {
-        filtered = filtered.filter(profile =>
-          profile.services?.some(service =>
+        // Age range filter - skip for spas
+        if (!isSpa && filters.ageRange) {
+          const minAge = Math.max(18, filters.ageRange.min || 18)
+          const maxAge = filters.ageRange.max || 99
+
+          const age = profile.age
+          if (!age || age < 18) return false
+          if (age < minAge || age > maxAge) return false
+        }
+
+        // Service Type filter - applies to ALL including spas
+        if (filters.serviceType && filters.serviceType !== "all") {
+          if (profile.serviceType?.toLowerCase() !== filters.serviceType.toLowerCase()) return false
+        }
+
+        // Specific service filter - applies to ALL including spas
+        if (filters.specificService && filters.specificService !== "all") {
+          const hasService = profile.services?.some(service =>
             service.name?.toLowerCase().includes(filters.specificService.toLowerCase())
           )
-        )
-      }
+          if (!hasService) return false
+        }
 
-      // Apply age range filter - ENHANCED: with strict 18+ validation
-      if (filters.ageRange) {
-        const minAge = Math.max(18, filters.ageRange.min || 18)
-        const maxAge = filters.ageRange.max || 99
+        // County filter - applies to ALL
+        if (filters.county) {
+          if (profile.location?.county?.toLowerCase() !== filters.county.toLowerCase()) return false
+        }
 
-        filtered = filtered.filter(profile => {
-          const age = profile.age
-          if (!age || age < 18) return false // Strict 18+ validation
-          return age >= minAge && age <= maxAge
-        })
-      }
-
-      // Apply county filter
-      if (filters.county) {
-        filtered = filtered.filter(profile =>
-          profile.location?.county?.toLowerCase() === filters.county.toLowerCase()
-        )
-      }
+        return true
+      })
 
       // Separate into profiles and spas
       const newProfiles = filtered.filter(p => p.userType !== "spa")

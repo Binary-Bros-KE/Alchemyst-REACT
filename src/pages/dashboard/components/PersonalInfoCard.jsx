@@ -392,7 +392,7 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
 
             {/* Erotica */}
             {/* Erotic Services */}
-            {isMassuse && (
+            {(isMassuse || isSpa) && (
               <div>
                 <label className="block text-sm font-medium text-text-primary mb-2">
                   Do you provide erotic services as well? (e.g., happy ending)
@@ -431,6 +431,7 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
               {renderField("Username", formData.username)}
               {renderField("About (Bio)", formData.bio, true)}
               {renderField("Service Type", formData.serviceType)}
+              {renderField("Provides Erotic Services", formData.providesEroticServices ? "Yes" : "No")}
             </>
             :
             isMassuse ?
@@ -446,7 +447,6 @@ export default function PersonalInfoCard({ userData, updateUserData }) {
                 {renderField("Ethnicity", formData.ethnicity)}
                 {renderField("Service Type", formData.serviceType)}
                 {renderField("Provides Erotic Services", formData.providesEroticServices ? "Yes" : "No")}
-                {console.log(`formData.providesEroticServices`, formData.providesEroticServices)}
               </>
               :
               <>

@@ -1,10 +1,10 @@
-import { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import { fetchAllProfiles, applyFilters } from '../redux/profilesSlice'
 import { setFilters, setSelectedCounty } from '../redux/uiSlice'
+import { useEffect, useCallback, useMemo } from 'react'
 
-const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
+const CACHE_DURATION = 10 * 60 * 1000 // 5 minutes
 
 export const useProfiles = () => {
   const dispatch = useDispatch()
@@ -25,8 +25,20 @@ export const useProfiles = () => {
 
   // Read URL parameters and apply filters on mount
   useEffect(() => {
-    const urlFilters = {}
-    
+    const urlFilters = {
+      // Reset to defaults first
+      userType: 'all',
+      gender: 'all',
+      bodyType: 'all',
+      breastSize: 'all',
+      serviceType: 'all',
+      sexualOrientation: 'all',
+      ethnicity: 'all',
+      servesWho: 'all',
+      specificService: 'all',
+      ageRange: { min: 18, max: null }
+    }
+
     // Read userType from URL (e.g., ?userType=escort)
     const userType = searchParams.get('userType')
     if (userType && ['escort', 'masseuse', 'of-model', 'spa'].includes(userType)) {
@@ -36,15 +48,51 @@ export const useProfiles = () => {
     // Read serviceType from URL (e.g., ?serviceType=massage)
     const serviceType = searchParams.get('serviceType')
     if (serviceType) {
-      urlFilters.serviceType = serviceType
+      urlFilters.specificService = serviceType
     }
 
-    // Apply URL filters if any exist
-    if (Object.keys(urlFilters).length > 0) {
-      const newFilters = { ...filters, ...urlFilters }
-      dispatch(setFilters(newFilters))
-    }
+    // Always apply the filters (either from URL or defaults)
+    dispatch(setFilters(urlFilters))
   }, [searchParams, dispatch])
+
+  // Check if any filters are active (excluding min age 18)
+  const hasActiveFilters = useMemo(() => {
+    return (
+      (filters.userType && filters.userType !== 'all') ||
+      (filters.gender && filters.gender !== 'all') ||
+      (filters.bodyType && filters.bodyType !== 'all') ||
+      (filters.breastSize && filters.breastSize !== 'all') ||
+      (filters.serviceType && filters.serviceType !== 'all') ||
+      (filters.sexualOrientation && filters.sexualOrientation !== 'all') ||
+      (filters.ethnicity && filters.ethnicity !== 'all') ||
+      (filters.servesWho && filters.servesWho !== 'all') ||
+      (filters.specificService && filters.specificService !== 'all') ||
+      (filters.ageRange?.max !== null)
+    )
+  }, [filters])
+
+    // Add this shuffle function at the top
+  const shuffleArray = (array) => {
+    const shuffled = [...array]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    return shuffled
+  }
+
+
+  // Shuffle profiles only when no filters are active
+  const displayProfiles = useMemo(() => {
+    if (hasActiveFilters) {
+      // Return sorted by package when filters are active
+      return filteredProfiles
+    } else {
+      // Return shuffled when no filters
+      return shuffleArray(filteredProfiles)
+    }
+  }, [filteredProfiles, hasActiveFilters])
+
 
   // Check if data needs to be fetched
   const shouldFetch = useCallback(() => {
@@ -76,23 +124,23 @@ export const useProfiles = () => {
   // Enhanced updateFilters function that can handle URL updates
   const updateFilters = useCallback((newFilters, applyImmediately = true) => {
     console.log('🎛️ Updating filters:', newFilters)
-    
+
     // Update Redux state
     dispatch(setFilters(newFilters))
-    
+
     // Update URL parameters for shareable links
     const newSearchParams = new URLSearchParams()
-    
+
     if (newFilters.userType && newFilters.userType !== 'all') {
       newSearchParams.set('userType', newFilters.userType)
     }
-    
+
     if (newFilters.serviceType && newFilters.serviceType !== 'all') {
       newSearchParams.set('serviceType', newFilters.serviceType)
     }
-    
+
     setSearchParams(newSearchParams)
-    
+
     // Apply filters immediately or wait for "Apply" button
     if (applyImmediately && allProfiles.length > 0) {
       const activeFilters = {
@@ -117,24 +165,25 @@ export const useProfiles = () => {
 
   return {
     // Display data (already filtered)
-    profiles: filteredProfiles,
+    profiles: displayProfiles,
     spas: filteredSpas,
-    
+
     // State
     loading,
     error,
     totalProfiles: allProfiles.length,
     displayedCount: totalCount,
-    
+
     // Actions
     updateFilters,
     updateCounty,
     refreshProfiles,
-    
+
     // Current filters
     filters,
     selectedCounty,
-    
+    hasActiveFilters,
+
     // Metadata
     lastFetchTime,
     isStale: shouldFetch()
