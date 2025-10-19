@@ -144,7 +144,7 @@ export default function ProfileCard({ profile }) {
     >
       {renderBadges()}
 
-      <div className="h-70 max-md:h-50 relative overflow-hidden">
+      <div className="h-70 max-md:h-100 relative overflow-hidden">
         <img
           src={profile.profileImage?.url || "https://placehold.co/300x400/232323/FFF?text=Profile"}
           alt={profile.username}
