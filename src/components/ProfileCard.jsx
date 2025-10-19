@@ -23,7 +23,7 @@ const Ribbon = ({ text, colorClass, icon, top }) => (
   </div>
 );
 
-export default function ProfileCard({ profile }) {
+export default function ProfileCard({ profile, imgHght }) {
   const navigate = useNavigate()
   const [showBio, setShowBio] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -144,7 +144,7 @@ export default function ProfileCard({ profile }) {
     >
       {renderBadges()}
 
-      <div className="h-70 max-md:h-100 relative overflow-hidden">
+      <div className={`h-70 ${imgHght ? imgHght : "max-md:h-50"} relative overflow-hidden`}>
         <img
           src={profile.profileImage?.url || "https://placehold.co/300x400/232323/FFF?text=Profile"}
           alt={profile.username}
@@ -158,11 +158,11 @@ export default function ProfileCard({ profile }) {
             className="absolute inset-0 bg-black/60 p-4 flex flex-col justify-center items-center text-center"
           >
             {profile.bio ? (
-              <p className="text-white text-sm line-clamp-6 mb-4">{profile.bio}</p>
+              <p className="text-white text-sm line-clamp-6 mb-4 max-md:mb-2">{profile.bio}</p>
             ) : (
-              <p className="text-white/70 text-sm mb-4 italic">No bio available</p>
+              <p className="text-white/70 text-sm mb-4 italic max-md:mb-2">No bio available</p>
             )}
-            <button className={`px-4 py-2 text-white rounded-lg font-medium transition-all cursor-pointer max-md:text-sm ${profile.userType === "masseuse" ? "bg-blue-500 hover:bg-blue-500/90" : profile.userType === "of-model" ? "bg-fuchsia-500 hover:bg-fuchsia-500/90" : "bg-primary hover:bg-primary/90"}`}>
+            <button className={`px-4 py-2 text-white rounded-lg font-medium transition-all cursor-pointer max-md:text-xs max-md:px-2 ${profile.userType === "masseuse" ? "bg-blue-500 hover:bg-blue-500/90" : profile.userType === "of-model" ? "bg-fuchsia-500 hover:bg-fuchsia-500/90" : "bg-primary hover:bg-primary/90"}`}>
               View Full Profile
             </button>
           </motion.div>

@@ -7,8 +7,7 @@ export default function Footer() {
   return (
     <footer className="relative mt-20 overflow-hidden">
       {/* Background Image with Dark Overlay */}
-      <div className="absolute inset-0">
-        <img src="/footer/lingerie-bg.png" alt="Footer background" className="w-full h-full object-cover" />
+      <div className="absolute inset-0 bg-[url('/footer/lingerie-bg.png')] max-md:bg-[url('/footer/footer-mobile.jpg')] bg-cover bg-center">
         <div className="absolute inset-0 bg-black/75"></div>
       </div>
 

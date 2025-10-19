@@ -35,8 +35,9 @@ export default function LocationPage() {
   const [localLoading, setLocalLoading] = useState(false)
 
   // REMOVED: The initial fetch useEffect - data should already be in Redux from useProfiles hook
-
   useEffect(() => {
+    window.scrollTo(0, 0)
+
     if (allProfiles.length > 0) {
       setLocalLoading(true)
       // Use setTimeout to ensure UI doesn't flash during quick filtering
@@ -145,15 +146,17 @@ export default function LocationPage() {
 
     return (
       <div className="mb-12">
-        <div className={`p-6 rounded-lg mb-6 border-l-4 ${tier === 'elite' ? 'bg-yellow-50 border-yellow-400' :
+        <div className={`p-6 max-md:p-2 rounded-lg mb-6 border-l-4 ${tier === 'elite' ? 'bg-yellow-50 border-yellow-400' :
           tier === 'premium' ? 'bg-purple-50 border-purple-400' :
             'bg-gray-50 border-gray-400'
           }`}>
-          <div className="flex items-center gap-2 mb-2">
+          <div className={`flex items-center gap-2 mb-2 ${tier === 'elite' ? 'text-yellow-400' :
+            tier === 'premium' ? 'text-purple-400' : 'text-gray-400'
+            }`}>
             <span>{icon}</span>
-            <h2 className="text-2xl font-bold text-foreground">{title}</h2>
+            <h2 className="text-2xl max-md:text-sm font-bold text-foreground">{title}</h2>
           </div>
-          <p className="text-muted-foreground">{description}</p>
+          <p className="text-muted-foreground max-md:text-xs">{description}</p>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -170,15 +173,17 @@ export default function LocationPage() {
 
     return (
       <div className="mb-12">
-        <div className={`p-6 rounded-lg mb-6 border-l-4 ${tier === 'elite' ? 'bg-yellow-50 border-yellow-400' :
+        <div className={`p-6 max-md:p-2 rounded-lg mb-6 border-l-4 ${tier === 'elite' ? 'bg-yellow-50 border-yellow-400' :
           tier === 'premium' ? 'bg-purple-50 border-purple-400' :
             'bg-gray-50 border-gray-400'
           }`}>
-          <div className="flex items-center gap-2 mb-2">
+          <div className={`flex items-center gap-2 mb-2 ${tier === 'elite' ? 'text-yellow-400' :
+            tier === 'premium' ? 'text-purple-400' : 'text-gray-400'
+            }`}>
             <span>{icon}</span>
-            <h2 className="text-2xl font-bold text-foreground">{title}</h2>
+            <h2 className="text-2xl max-md:text-sm font-bold text-foreground">{title}</h2>
           </div>
-          <p className="text-muted-foreground">{description}</p>
+          <p className="text-muted-foreground max-md:text-xs">{description}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -212,8 +217,9 @@ export default function LocationPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="bg-gradient-to-b from-neutral-900 to-background py-10 px-4">
-        <div className="container mx-auto max-w-7xl">
+      <div className="bg-[url('/footer/lingerie-bg.png')] bg-cover bg-center py-10 px-4 relative">
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="relative container mx-auto max-w-7xl z-10">
           <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-2 text-text-inverse/80 hover:text-text-inverse mb-6 transition-colors"
@@ -225,6 +231,7 @@ export default function LocationPage() {
           <h1 className="text-4xl font-bold text-text-inverse mb-2 capitalize">{getPageTitle()}</h1>
           <p className="text-lg text-text-inverse/70 capitalize">{getPageSubtitle()}</p>
         </div>
+
       </div>
 
       {/* Location Navigation */}
@@ -382,28 +389,28 @@ export default function LocationPage() {
           </>
         )}
 
-            <div className="border-t border-border">
-            </div>
+        <div className="border-t border-border">
+        </div>
 
 
         {/* Comprehensive SEO Content Section */}
         {showContent && (
-          <div className="container mx-auto px-4 pt-10 max-w-7xl">
-            <div className="bg-white rounded-2xl py-8">
+          <div className="container mx-auto px-4 pt-10 max-w-7xl max-md:px-2">
+            <div className="bg-white rounded-2xl py-8 max-md:py-0">
               <div className="prose prose-lg max-w-none text-gray-700">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                  Find the Best Escorts, Call Girls & Adult Services in <span className="capitalize">{location || county}</span> 
+                <h2 className="text-3xl font-bold text-gray-900 mb-6 max-md:text-lg">
+                  Find the Best Escorts, Call Girls & Adult Services in <span className="capitalize">{location || county}</span>
                 </h2>
 
-                <p className="text-xl leading-relaxed mb-6">
+                <p className="text-xl leading-relaxed mb-6 max-md:text-sm">
                   Welcome to Alchemyst's exclusive directory of premium adult entertainment in <strong className="capitalize">{location || county}</strong>.
                   Whether you're looking for <strong>sexy escorts</strong>, <strong>professional masseuses</strong>,
                   <strong> exclusive OF-models</strong>, or <strong>luxurious spas</strong>, we've curated the finest selection
                   of verified service providers in the area.
                 </p>
 
-                <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
-                  Premium Adult Entertainment in <span className="capitalize">{location || county}</span> 
+                <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4 max-md:text-lg max-md:mt-4 max-md:mb-4">
+                  Premium Adult Entertainment in <span className="capitalize">{location || county}</span>
                 </h3>
 
                 <p className="leading-relaxed mb-6">
@@ -414,11 +421,11 @@ export default function LocationPage() {
                 </p>
 
                 <div className="grid md:grid-cols-2 gap-8 my-8">
-                  <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                    <h4 className="text-xl font-semibold text-blue-900 mb-4 flex items-center gap-2">
+                  <div className="bg-blue-50 p-6 rounded-lg border border-blue-200 max-md:p-4">
+                    <h4 className="text-xl font-semibold text-blue-900 mb-4 flex items-center gap-2 max-md:text-lg">
                       <GiCurlyMask />
-                       What to Expect in <span className="capitalize">{location || county}</span> 
-                       </h4>
+                      What to Expect in <span className="capitalize">{location || county}</span>
+                    </h4>
                     <ul className="space-y-3 text-blue-800">
                       <li className="flex items-start gap-3">
                         <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
@@ -439,11 +446,11 @@ export default function LocationPage() {
                     </ul>
                   </div>
 
-                  <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
-                    <h4 className="text-xl font-semibold text-purple-900 mb-4 flex items-center gap-2">
+                  <div className="bg-purple-50 p-6 rounded-lg border border-purple-200 max-md:p-4">
+                    <h4 className="text-xl font-semibold text-purple-900 mb-4 flex items-center gap-2 max-md:text-lg">
                       <GiDualityMask />
-                       Popular Services
-                       </h4>
+                      Popular Services
+                    </h4>
                     <ul className="space-y-3 text-purple-800">
                       <li className="flex items-start gap-3">
                         <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
@@ -475,13 +482,13 @@ export default function LocationPage() {
                   All our providers offer flexible scheduling for incalls and outcalls, ensuring you get the service you want when you want it.
                 </p>
 
-                <div className="bg-gradient-to-r from-primary to-purple-600 rounded-2xl p-8 text-white my-8">
+                <div className="bg-gradient-to-r from-primary to-purple-600 rounded-2xl p-8 text-white my-8 max-md:p-4">
                   <h4 className="text-2xl font-bold mb-4 text-center">
                     Join {location || county}'s Premier Adult Entertainment Community
                   </h4>
-                  <p className="text-lg text-center mb-6 opacity-90">
+                  <p className="text-lg text-center mb-6 opacity-90 max-md:text-sm">
                     Whether you're a service provider looking to reach more clients in {location || county}&nbsp;
-                     or someone seeking premium adult entertainment, Alchemyst offers the perfect platform
+                    or someone seeking premium adult entertainment, Alchemyst offers the perfect platform
                     for discreet, professional connections.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -502,9 +509,9 @@ export default function LocationPage() {
 
                 <div className="mt-8 p-6 bg-gray-100 rounded-lg border-l-4 border-primary">
                   <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                     <LuSearchCheck />
-                     Popular Searches in {location || county}:
-                     </h4>
+                    <LuSearchCheck />
+                    Popular Searches in {location || county}:
+                  </h4>
                   <div className="flex flex-wrap gap-2 text-sm">
                     <span className="bg-white px-3 py-1 rounded-full border">escorts {location || county}</span>
                     <span className="bg-white px-3 py-1 rounded-full border">call girls {location || county}</span>

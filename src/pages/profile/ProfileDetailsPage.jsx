@@ -976,7 +976,7 @@ const generateSEOCopy = () => {
               transition={{ delay: 0.2 }}
               className="mt-8"
             >
-              <h2 className="text-4xl font-bold text-neutral-900 mb-6">
+              <h2 className="text-4xl font-bold text-neutral-900 mb-6 max-md:text-3xl">
                 <span className={`${profile.userType === "masseuse" ? "bg-[url('/graphic/scratch-massuse.png')]" : profile.userType === "of-model" ? "bg-[url('/graphic/scratch-of.png')]" : "bg-[url('/graphic/scratch.png')]"} bg-contain bg-center bg-no-repeat text-white px-6 py-2`}>Services</span> Offered
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1046,7 +1046,7 @@ const generateSEOCopy = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mt-16 bg-gray-50 rounded-xl py-8 px-4"
+          className="mt-16 py-8 px-4 max-md:px-2 max-md:mt-10"
         >
           <div
             className="prose prose-lg max-w-none"
@@ -1114,7 +1114,7 @@ const generateSEOCopy = () => {
             className="mt-12"
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-4xl font-bold text-neutral-900">
+              <h2 className="text-4xl font-bold text-neutral-900 max-md:text-2xl">
                 Similar {profile.userType === 'spa' ? 'Profiles' : 'Profiles'} in <span className={`${profile.userType === "masseuse" ? "bg-[url('/graphic/scratch-massuse.png')]" : profile.userType === "of-model" ? "bg-[url('/graphic/scratch-of.png')]" : "bg-[url('/graphic/scratch.png')]"} bg-contain bg-center bg-no-repeat text-white px-6 py-2`}>{profile.location?.location}</span>
               </h2>
               <button
@@ -1147,7 +1147,7 @@ const generateSEOCopy = () => {
             >
               {similarProfiles.map((similarProfile) => (
                 <SwiperSlide key={similarProfile._id}>
-                  <ProfileCard profile={similarProfile} />
+                  <ProfileCard profile={similarProfile} imgHght={"max-md:h-80"}/>
                 </SwiperSlide>
               ))}
             </Swiper>

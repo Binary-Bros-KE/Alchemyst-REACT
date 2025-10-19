@@ -17,6 +17,7 @@ import ScrollToTop from "./components/BackToTop";
 // Add these imports
 import BlogsPage from './pages/blog/BlogsPage';
 import BlogDetailsPage from './pages/blog/BlogDetailsPage';
+import SnapToTop from "./components/SnapToTop"
 
 
 
@@ -28,6 +29,7 @@ function App() {
           <Toaster position="top-right" />
           <Navbar />
           <ScrollToTop />
+          <SnapToTop />
           <Routes>
             <Route path="/" element={<Home />} />
 
