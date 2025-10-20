@@ -7,8 +7,8 @@ export default function Footer() {
   return (
     <footer className="relative mt-20 overflow-hidden">
       {/* Background Image with Dark Overlay */}
-      <div className="absolute inset-0 bg-[url('/footer/lingerie-bg.png')] max-md:bg-[url('/footer/footer-mobile.jpg')] bg-cover bg-center">
-        <div className="absolute inset-0 bg-black/75"></div>
+      <div className="absolute inset-0 bg-[url('/footer.png')] max-md:bg-[url('/footer/footer-mobile.jpg')] bg-cover bg-center">
+        <div className="absolute inset-0 bg-black/90"></div>
       </div>
 
       {/* Footer Content */}
@@ -16,7 +16,7 @@ export default function Footer() {
         {/* Top Section - Logo and Description */}
         <div className="mb-12 text-center">
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
-            <FaHeart className="text-primary text-3xl" />
+            <img src="/primary-logo.png" alt="Alchemyst Logo" className="h-10" />
             <span className="text-3xl font-bold text-white">Alchemyst</span>
           </Link>
           <p className="text-neutral-300 max-w-2xl mx-auto text-sm">

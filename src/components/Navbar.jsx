@@ -90,7 +90,7 @@ export default function Navbar() {
     { href: "/?userType=escort", label: "Escorts" },
     { href: "/?serviceType=massage", label: "Massage" },
     { href: "/?userType=of-model", label: "OF Models" }, // Changed from OFModel to of-model
-    { href: "/?userType=spa", label: "Erotic Spas" },
+    { href: "/?userType=spa", label: "Spas" },
     { href: "/blog", label: "Blog" },
   ];
 
@@ -105,7 +105,7 @@ export default function Navbar() {
       }}
       className={`transition-colors ${isMobile
         ? `text-4xl font-bold text-text-inverse hover:text-primary ${location.pathname === link.href ? "text-primary" : ""}`
-        : `text-text-inverse/80 hover:text-primary ${location.pathname === link.href ? "text-primary font-medium" : ""}`
+        : `text-text-inverse hover:text-primary ${location.pathname === link.href ? "text-primary font-medium" : ""}`
         }`}
     >
       {link.label}

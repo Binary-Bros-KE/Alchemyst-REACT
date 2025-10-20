@@ -61,16 +61,17 @@ export default function BlogsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-br from-purple-900 to-blue-800 text-white py-16">
-        <div className="mx-auto px-4  max-w-7xl">
+      <div className="relative bg-[url('https://res.cloudinary.com/dowxcmeyy/image/upload/v1760962804/alchemyst-sex-talk_fhazdb.png')] bg-cover bg-center text-white py-16">
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="relative mx-auto px-4  max-w-7xl z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Alchemyst Blog
+             Let's Talk Sex
             </h1>
             <p className="text-xl text-blue-100 mb-8">
               Discover stories, tips, and insights about dating, relationships, and adult entertainment in Kenya
             </p>
-            
+
             {/* Search Bar */}
             <div className="relative max-w-2xl mx-auto">
               <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -109,11 +110,10 @@ export default function BlogsPage() {
                 <div className="space-y-2">
                   <button
                     onClick={() => setSelectedCategory("all")}
-                    className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                      selectedCategory === "all" 
-                        ? "bg-primary text-white" 
+                    className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${selectedCategory === "all"
+                        ? "bg-primary text-white"
                         : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     All Categories
                   </button>
@@ -121,11 +121,10 @@ export default function BlogsPage() {
                     <button
                       key={category}
                       onClick={() => setSelectedCategory(category)}
-                      className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                        selectedCategory === category 
-                          ? "bg-primary text-white" 
+                      className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${selectedCategory === category
+                          ? "bg-primary text-white"
                           : "text-gray-700 hover:bg-gray-100"
-                      }`}
+                        }`}
                     >
                       {category}
                     </button>
@@ -141,11 +140,10 @@ export default function BlogsPage() {
                     <button
                       key={option.value}
                       onClick={() => setSortBy(option.value)}
-                      className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                        sortBy === option.value 
-                          ? "bg-primary text-white" 
+                      className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${sortBy === option.value
+                          ? "bg-primary text-white"
                           : "text-gray-700 hover:bg-gray-100"
-                      }`}
+                        }`}
                     >
                       {option.label}
                     </button>
@@ -191,21 +189,19 @@ export default function BlogsPage() {
                 <div className="flex bg-white rounded-lg border p-1">
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`p-2 rounded ${
-                      viewMode === "grid" 
-                        ? "bg-primary text-white" 
+                    className={`p-2 rounded ${viewMode === "grid"
+                        ? "bg-primary text-white"
                         : "text-gray-600 hover:text-gray-900"
-                    }`}
+                      }`}
                   >
                     <FiGrid size={18} />
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`p-2 rounded ${
-                      viewMode === "list" 
-                        ? "bg-primary text-white" 
+                    className={`p-2 rounded ${viewMode === "list"
+                        ? "bg-primary text-white"
                         : "text-gray-600 hover:text-gray-900"
-                    }`}
+                      }`}
                   >
                     <FiList size={18} />
                   </button>
@@ -232,7 +228,7 @@ export default function BlogsPage() {
                   {featuredBlogs.length > 0 ? "More Articles" : "All Articles"}
                 </h3>
                 <div className={
-                  viewMode === "grid" 
+                  viewMode === "grid"
                     ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                     : "space-y-6"
                 }>

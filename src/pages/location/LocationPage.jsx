@@ -3,17 +3,15 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { FiArrowLeft } from "react-icons/fi"
-import { toast } from "react-hot-toast"
 import { useSelector, useDispatch } from "react-redux"
 import ProfileCard from "../../components/ProfileCard"
 import SpaCard from "../../components/SpaCard"
-import FilterBar from "../../components/FilterBar"
-import { applyFilters } from "../../redux/profilesSlice" // REMOVED: fetchInitialProfiles
 import { IoStarOutline } from "react-icons/io5"
 import { MdOutlineLocalFireDepartment } from "react-icons/md"
 import { LuLeaf, LuSearchCheck, LuSpade } from "react-icons/lu"
 import { CgGirl } from "react-icons/cg"
 import { GiCurlyMask, GiDualityMask, GiSelfLove } from "react-icons/gi"
+import locationsData from "../../data/counties.json"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -22,8 +20,17 @@ export default function LocationPage() {
   const locationHook = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [bgImage, setBgImage] = useState('/ass.png')
 
   const { county, location, area } = params
+
+  // Update background image based on county
+  useEffect(() => {
+    const countyData = locationsData.find(
+      c => c.name.toLowerCase() === county?.toLowerCase()
+    )
+    setBgImage(countyData?.coverImage || '/ass.png')
+  }, [county])
 
   // Get data from Redux store - updated to match new structure
   const { allProfiles, filteredProfiles, filteredSpas, loading } = useSelector(state => state.profiles)
@@ -217,7 +224,10 @@ export default function LocationPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="bg-[url('/footer/lingerie-bg.png')] bg-cover bg-center py-10 px-4 relative">
+      <div
+        className="bg-cover bg-center py-10 px-4 relative"
+        style={{ backgroundImage: `url('${bgImage}')` }}
+      >
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="relative container mx-auto max-w-7xl z-10">
           <button
@@ -394,7 +404,6 @@ export default function LocationPage() {
 
 
         {/* Comprehensive SEO Content Section */}
-        {showContent && (
           <div className="container mx-auto px-4 pt-10 max-w-7xl max-md:px-2">
             <div className="bg-white rounded-2xl py-8 max-md:py-0">
               <div className="prose prose-lg max-w-none text-gray-700">
@@ -526,7 +535,6 @@ export default function LocationPage() {
               </div>
             </div>
           </div>
-        )}
       </div>
     </div>
   )

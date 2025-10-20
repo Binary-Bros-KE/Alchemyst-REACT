@@ -1,9 +1,9 @@
 export const BLOG_CATEGORIES = [
-    "Misllaneous",
-    "Sex Ed",
     "Confessions",
     "Couples",
     "BDSM",
+    "Sex Toys",
+    "Sex Ed",
     "Industry News"
 ];
 

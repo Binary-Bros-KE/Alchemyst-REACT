@@ -2,6 +2,7 @@
     {
         "name": "Baringo",
         "capital": "Kabarnet",
+        "coverImage": "",
         "code": 30,
         "sub_counties": [
             "Baringo central",
@@ -15,6 +16,7 @@
     {
         "name": "Bomet",
         "capital": "Bomet",
+        "coverImage": "",
         "code": 36,
         "sub_counties": [
             "Bomet central",
@@ -27,6 +29,7 @@
     {
         "name": "Bungoma",
         "capital": "Bungoma",
+        "coverImage": "",
         "code": 39,
         "sub_counties": [
             "Bumula",
@@ -43,6 +46,7 @@
     {
         "name": "Busia",
         "capital": "Busia",
+        "coverImage": "",
         "code": 40,
         "sub_counties": [
             "Budalangi",
@@ -53,9 +57,10 @@
             "Teso South"
         ]
     },
-      {
+    {
         "name": "Eldoret",
         "capital": "Eldoret",
+        "coverImage": "",
         "code": 27,
         "sub_counties": [
             "Eldoret Town",
@@ -76,6 +81,7 @@
     {
         "name": "Elgeyo-Marakwet",
         "capital": "Iten",
+        "coverImage": "",
         "code": 28,
         "sub_counties": [
             "Keiyo north",
@@ -87,6 +93,7 @@
     {
         "name": "Embu",
         "capital": "Embu",
+        "coverImage": "",
         "code": 14,
         "sub_counties": [
             "Manyatta",
@@ -98,6 +105,7 @@
     {
         "name": "Garissa",
         "capital": "Garissa",
+        "coverImage": "",
         "code": 7,
         "sub_counties": [
             "Daadab",
@@ -111,6 +119,7 @@
     {
         "name": "Homa Bay",
         "capital": "Homa Bay",
+        "coverImage": "",
         "code": 43,
         "sub_counties": [
             "Homabay town",
@@ -126,6 +135,7 @@
     {
         "name": "Isiolo",
         "capital": "Isiolo",
+        "coverImage": "",
         "code": 11,
         "sub_counties": [
             "Central",
@@ -138,6 +148,7 @@
     },
     {
         "name": "Kajiado",
+        "coverImage": "",
         "code": 34,
         "sub_counties": [
             "Isinya.",
@@ -150,6 +161,7 @@
     {
         "name": "Kakamega",
         "capital": "Kakamega",
+        "coverImage": "",
         "code": 37,
         "sub_counties": [
             "Butere",
@@ -170,6 +182,7 @@
     {
         "name": "Kericho",
         "capital": "Kericho",
+        "coverImage": "",
         "code": 35,
         "sub_counties": [
             "Ainamoi",
@@ -183,6 +196,7 @@
     {
         "name": "Kiambu",
         "capital": "Kiambu",
+        "coverImage": "",
         "code": 22,
         "sub_counties": [
             "Gatundu north",
@@ -202,6 +216,7 @@
     {
         "name": "Kilifi",
         "capital": "Kilifi",
+        "coverImage": "",
         "code": 3,
         "sub_counties": [
             "Genzw",
@@ -216,6 +231,7 @@
     {
         "name": "Kirinyaga",
         "capital": "Kerugoya/Kutus",
+        "coverImage": "",
         "code": 20,
         "sub_counties": [
             "Kirinyaga central",
@@ -228,12 +244,14 @@
     {
         "name": "Kisii",
         "capital": "Kisii",
+        "coverImage": "",
         "code": 45,
         "sub_counties": []
     },
     {
         "name": "Kisumu",
         "capital": "Kisumu",
+        "coverImage": "",
         "code": 42,
         "sub_counties": [
             "Ahero",
@@ -257,6 +275,7 @@
     {
         "name": "Kitui",
         "capital": "Kitui",
+        "coverImage": "",
         "code": 15,
         "sub_counties": [
             "Ikutha",
@@ -279,6 +298,7 @@
     {
         "name": "Kwale",
         "capital": "Kwale",
+        "coverImage": "",
         "code": 2,
         "sub_counties": [
             "Kinango",
@@ -290,6 +310,7 @@
     {
         "name": "Laikipia",
         "capital": "Rumuruti",
+        "coverImage": "",
         "code": 31,
         "sub_counties": [
             "Laikipia central",
@@ -302,6 +323,7 @@
     {
         "name": "Lamu",
         "capital": "Lamu",
+        "coverImage": "",
         "code": 5,
         "sub_counties": [
             "Lamu East",
@@ -311,6 +333,7 @@
     {
         "name": "Machakos",
         "capital": "Machakos",
+        "coverImage": "",
         "code": 16,
         "sub_counties": [
             "Kathiani",
@@ -325,6 +348,7 @@
     {
         "name": "Makueni",
         "capital": "Wote",
+        "coverImage": "",
         "code": 17,
         "sub_counties": [
             "Kaiti",
@@ -338,6 +362,7 @@
     {
         "name": "Mandera",
         "capital": "Mandera",
+        "coverImage": "",
         "code": 9,
         "sub_counties": [
             "Banissa",
@@ -351,6 +376,7 @@
     {
         "name": "Marsabit",
         "capital": "Marsabit",
+        "coverImage": "",
         "code": 10,
         "sub_counties": [
             "Laisamis",
@@ -362,6 +388,7 @@
     {
         "name": "Meru",
         "capital": "Meru",
+        "coverImage": "",
         "code": 12,
         "sub_counties": [
             "Buuri",
@@ -378,6 +405,7 @@
     {
         "name": "Migori",
         "capital": "Migori",
+        "coverImage": "",
         "code": 44,
         "sub_counties": [
             "Awendo",
@@ -394,6 +422,7 @@
     {
         "name": "Mombasa",
         "capital": "Mombasa City",
+        "coverImage": "https://res.cloudinary.com/dowxcmeyy/image/upload/v1760968777/mombasa_a7ipk1.jpg",
         "code": 1,
         "sub_counties": [
             "Bamburi",
@@ -420,6 +449,7 @@
     {
         "name": "Murang'a",
         "capital": "Murang'a",
+        "coverImage": "",
         "code": 21,
         "sub_counties": [
             "Gatanga",
@@ -435,6 +465,7 @@
     {
         "name": "Nairobi",
         "capital": "Nairobi City",
+        "coverImage": "https://res.cloudinary.com/dowxcmeyy/image/upload/v1760967986/nairobi-escorts_djp162.png",
         "code": 47,
         "sub_counties": [
             "Allsops",
@@ -523,6 +554,7 @@
     {
         "name": "Nakuru",
         "capital": "Nakuru",
+        "coverImage": "",
         "code": 32,
         "sub_counties": [
             "Bahati",
@@ -555,6 +587,7 @@
     {
         "name": "Nandi",
         "capital": "Kapsabet",
+        "coverImage": "",
         "code": 29,
         "sub_counties": [
             "Aldai",
@@ -568,6 +601,7 @@
     {
         "name": "Narok",
         "capital": "Narok",
+        "coverImage": "",
         "code": 33,
         "sub_counties": [
             "Narok east",
@@ -581,6 +615,7 @@
     {
         "name": "Nyamira",
         "capital": "Nyamira",
+        "coverImage": "",
         "code": 46,
         "sub_counties": [
             "Borabu",
@@ -593,6 +628,7 @@
     {
         "name": "Nyandarua",
         "capital": "Ol Kalou",
+        "coverImage": "",
         "code": 18,
         "sub_counties": [
             "Kinangop",
@@ -605,6 +641,7 @@
     {
         "name": "Nyeri",
         "capital": "Nyeri",
+        "coverImage": "",
         "code": 19,
         "sub_counties": [
             "Kieni east",
@@ -620,6 +657,7 @@
     {
         "name": "Samburu",
         "capital": "Maralal",
+        "coverImage": "",
         "code": 25,
         "sub_counties": [
             "Samburu east",
@@ -630,6 +668,7 @@
     {
         "name": "Siaya",
         "capital": "Siaya",
+        "coverImage": "",
         "code": 41,
         "sub_counties": [
             "Alego usonga",
@@ -643,6 +682,7 @@
     {
         "name": "Taita-Taveta",
         "capital": "Voi",
+        "coverImage": "",
         "code": 6,
         "sub_counties": [
             "Mwatate",
@@ -654,6 +694,7 @@
     {
         "name": "Tana River",
         "capital": "Hola",
+        "coverImage": "",
         "code": 4,
         "sub_counties": [
             "Bura",
@@ -664,6 +705,7 @@
     {
         "name": "Tharaka-Nithi",
         "capital": "Chuka",
+        "coverImage": "",
         "code": 13,
         "sub_counties": [
             "Chuka",
@@ -677,6 +719,7 @@
     {
         "name": "Trans-Nzoia",
         "capital": "Kitale",
+        "coverImage": "",
         "code": 26,
         "sub_counties": [
             "Cherangany",
@@ -689,6 +732,7 @@
     {
         "name": "Turkana",
         "capital": "Lodwar",
+        "coverImage": "",
         "code": 23,
         "sub_counties": [
             "Loima",
@@ -698,10 +742,10 @@
             "Turkana south"
         ]
     },
-
     {
         "name": "Vihiga",
         "capital": "Vihiga",
+        "coverImage": "",
         "code": 38,
         "sub_counties": [
             "Emuhaya",
@@ -714,6 +758,7 @@
     {
         "name": "Wajir",
         "capital": "Wajir",
+        "coverImage": "",
         "code": 8,
         "sub_counties": [
             "Eldas",
@@ -727,6 +772,7 @@
     {
         "name": "West Pokot",
         "capital": "Kapenguria",
+        "coverImage": "",
         "code": 24,
         "sub_counties": [
             "Central Pokot",

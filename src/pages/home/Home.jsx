@@ -192,7 +192,7 @@ export default function Home() {
       (filters.ethnicity && filters.ethnicity !== 'all') ||
       (filters.servesWho && filters.servesWho !== 'all') ||
       (filters.specificService && filters.specificService !== 'all') ||
-      (filters.ageRange?.max !== null) // Only check max age, not min
+      (filters.ageRange?.max !== null)
     )
   }
 
@@ -265,8 +265,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="bg-gradient-to-b from-neutral-900 to-background py-16 px-4 max-md:py-10">
-        <div className="container mx-auto max-w-6xl">
+      <div className="relative bg-[url('/footer/lingerie-bg.png')] bg-cover bg-center py-16 px-4 max-md:py-10">
+      <div className="absolute inset-0 bg-black/60"></div>
+        <div className="relative container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4">
             <h1 className="text-4xl md:text-5xl font-bold text-text-inverse mb-4 max-md:flex max-md:flex-col">
               Home of
@@ -445,7 +446,7 @@ export default function Home() {
                 slidesPerView={1}
                 navigation
                 autoplay={{
-                  delay: 1500,
+                  delay: 2500,
                   disableOnInteraction: false,
                   pauseOnMouseEnter: true,
                 }}
