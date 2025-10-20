@@ -299,125 +299,125 @@ export default function ProfileDetailsPage() {
   };
 
   // NEW: SEO-optimized content generator
-const generateSEOCopy = () => {
-  if (!profile) return "";
+  const generateSEOCopy = () => {
+    if (!profile) return "";
 
-  const { username, userType, location, age, services, bio, verification, currentPackage, providesEroticServices } = profile;
-  const county = location?.county || "Nairobi";
-  const area = location?.area?.[0] || location?.location || "the area";
-  const locationString = `${area}, ${county}`;
+    const { username, userType, location, age, services, bio, verification, currentPackage, providesEroticServices } = profile;
+    const county = location?.county || "Nairobi";
+    const area = location?.area?.[0] || location?.location || "the area";
+    const locationString = `${area}, ${county}`;
 
-  // Base service definitions
-  const serviceTypes = {
-    escort: {
-      title: "Escort",
-      keywords: ["escorts", "call girls", "companionship", "dating", "hookups", "sexy girls", "female escorts"],
-      description: "premium escort services",
-      synonyms: ["companion", "call girl", "escort service"]
-    },
-    masseuse: {
-      title: "Masseuse",
-      keywords: providesEroticServices
-        ? ["massage", "bodywork", "relaxation", "therapeutic massage", "erotic massage", "sensual massage"]
-        : ["massage", "bodywork", "relaxation", "therapeutic massage", "deep tissue", "sports massage"],
-      description: providesEroticServices
-        ? "professional erotic and sensual massage services"
-        : "professional therapeutic and wellness massage services",
-      synonyms: providesEroticServices
-        ? ["massage therapist", "bodywork specialist", "sensual masseuse"]
-        : ["massage therapist", "wellness specialist", "spa masseuse"]
-    },
-    "of-model": {
-      title: "OnlyFans Model",
-      keywords: ["OnlyFans", "content creation", "premium content", "online modeling", "adult content"],
-      description: "exclusive OnlyFans content",
-      synonyms: ["content creator", "online model"]
-    },
-    spa: {
-      title: "Spa",
-      keywords: ["spa services", "massage parlor", "adult entertainment", "relaxation center", "wellness spa"],
-      description: "luxurious spa and wellness experiences",
-      synonyms: ["massage parlor", "wellness center"]
-    }
-  };
+    // Base service definitions
+    const serviceTypes = {
+      escort: {
+        title: "Escort",
+        keywords: ["escorts", "call girls", "companionship", "dating", "hookups", "sexy girls", "female escorts"],
+        description: "premium escort services",
+        synonyms: ["companion", "call girl", "escort service"]
+      },
+      masseuse: {
+        title: "Masseuse",
+        keywords: providesEroticServices
+          ? ["massage", "bodywork", "relaxation", "therapeutic massage", "erotic massage", "sensual massage"]
+          : ["massage", "bodywork", "relaxation", "therapeutic massage", "deep tissue", "sports massage"],
+        description: providesEroticServices
+          ? "professional erotic and sensual massage services"
+          : "professional therapeutic and wellness massage services",
+        synonyms: providesEroticServices
+          ? ["massage therapist", "bodywork specialist", "sensual masseuse"]
+          : ["massage therapist", "wellness specialist", "spa masseuse"]
+      },
+      "of-model": {
+        title: "OnlyFans Model",
+        keywords: ["OnlyFans", "content creation", "premium content", "online modeling", "adult content"],
+        description: "exclusive OnlyFans content",
+        synonyms: ["content creator", "online model"]
+      },
+      spa: {
+        title: "Spa",
+        keywords: ["spa services", "massage parlor", "adult entertainment", "relaxation center", "wellness spa"],
+        description: "luxurious spa and wellness experiences",
+        synonyms: ["massage parlor", "wellness center"]
+      }
+    };
 
-  const serviceInfo = serviceTypes[userType] || {
-    title: "Entertainment",
-    keywords: ["adult services", "entertainment"],
-    description: "premium adult entertainment services",
-    synonyms: ["service provider"]
-  };
+    const serviceInfo = serviceTypes[userType] || {
+      title: "Entertainment",
+      keywords: ["adult services", "entertainment"],
+      description: "premium adult entertainment services",
+      synonyms: ["service provider"]
+    };
 
-  // Verification & trust badges
-  const verificationBadges = [];
-  if (verification?.profileVerified) verificationBadges.push("Verified Profile");
-  if (verification?.backgroundCheck) verificationBadges.push("Background Verified");
-  if (currentPackage?.status === "active") verificationBadges.push("Premium Member");
+    // Verification & trust badges
+    const verificationBadges = [];
+    if (verification?.profileVerified) verificationBadges.push("Verified Profile");
+    if (verification?.backgroundCheck) verificationBadges.push("Background Verified");
+    if (currentPackage?.status === "active") verificationBadges.push("Premium Member");
 
-  const serviceList = services?.length ? services.map(s => s.name).join(", ") : "customized services";
+    const serviceList = services?.length ? services.map(s => s.name).join(", ") : "customized services";
 
-  // Trust indicator rendering
-  const renderTrustIndicators = () => {
-    const list = [];
+    // Trust indicator rendering
+    const renderTrustIndicators = () => {
+      const list = [];
 
-    if (verification?.profileVerified)
-      list.push(`
+      if (verification?.profileVerified)
+        list.push(`
         <li class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}"></span>
           <span>Verified profile with complete background check</span>
         </li>
       `);
 
-    if (currentPackage?.status === "active")
-      list.push(`
+      if (currentPackage?.status === "active")
+        list.push(`
         <li class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}"></span>
           <span>Premium ${userType} offering top-rated services</span>
         </li>
       `);
 
-    list.push(`
+      list.push(`
       <li class="flex items-center gap-2">
         <span class="w-2 h-2 rounded-full ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}"></span>
         <span>Professional and discreet services in ${area}</span>
       </li>
     `);
 
-    list.push(`
+      list.push(`
       <li class="flex items-center gap-2">
         <span class="w-2 h-2 rounded-full ${profile.userType === "masseuse" ? "bg-blue-500" : profile.userType === "of-model" ? "bg-fuchsia-500" : "bg-primary"}"></span>
         <span>Flexible scheduling for your convenience</span>
       </li>
     `);
 
-    return list.join("");
-  };
+      return list.join("");
+    };
 
-  // Adjusted service section for masseuse profiles
-  const serviceParagraph =
-    userType === "masseuse"
-      ? providesEroticServices
-        ? `
+    // Adjusted service section for masseuse profiles
+    const serviceParagraph =
+      userType === "masseuse"
+        ? providesEroticServices
+          ? `
         <p class="text-lg">
           <strong>${username}</strong> provides both <strong>therapeutic and sensual massage</strong> experiences, 
           combining relaxation with intimacy in a professional and safe environment. 
           Enjoy a personalized experience in ${locationString}, designed to meet your specific preferences 
           while maintaining complete confidentiality.
         </p>`
-        : `
+          : `
         <p class="text-lg">
           <strong>${username}</strong> specializes in <strong>professional, non-erotic massage therapy</strong> 
           focused on wellness, relaxation, and physical rejuvenation. 
           Perfect for clients seeking deep tissue, Swedish, or sports massage sessions in ${locationString}.
         </p>`
-      : `
+        : `
         <p class="text-lg">
           Offering services in <strong>${serviceList}</strong>, ${username} provides customized experiences 
           tailored to your specific desires. Whether you're looking for companionship, 
           relaxation, or exclusive entertainment, you'll find satisfaction with this professional ${serviceInfo.title.toLowerCase()}.
         </p>`;
 
-  return `
+    return `
   <div class="seo-content space-y-6 text-gray-700 leading-relaxed text-left">
     <h1 class="text-2xl font-bold text-gray-900 mb-4 capitalize">
       ${username} – ${serviceInfo.title} in ${locationString} | Alchemyst ${serviceInfo.title}s
@@ -548,7 +548,7 @@ const generateSEOCopy = () => {
       </p>
     </div>
   </div>`;
-};
+  };
 
 
 
@@ -618,7 +618,7 @@ const generateSEOCopy = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-neutral-900 py-4 px-4 sticky top-0 z-40">
+      <div className="bg-neutral-900 py-4 px-4 z-40">
         <div className="container mx-auto max-w-7xl flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
@@ -627,9 +627,13 @@ const generateSEOCopy = () => {
             <FiArrowLeft size={20} className={`border rounded-full ml-4 h-8 w-8 p-1 ${profile.userType === "masseuse" ? "text-blue-500 bg-blue-500/10 border-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500 bg-fuchsia-500/10 border-fuchsia-500" : "text-primary bg-primary/10 border-primary"}`} />
             <span className="hidden sm:inline">Back</span>
           </button>
-          <h1 className="text-white font-medium text-lg truncate max-w-xs sm:max-w-md capitalize max-md:flex max-md:flex-col">
-            <span className={`font-bold ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>Alchemyst {profile.userType}s </span> 
-            <span className="max-md:hidden">&gt;&gt;</span> Hook up with {profile.username}
+          <h1 className="text-white font-medium text-lg truncate max-w-xs sm:max-w-md flex gap-2 max-md:gap-0 capitalize max-md:flex max-md:flex-col">
+            <span className={`font-bold ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>Alchemyst {profile.userType}s </span>
+            <span className="max-md:hidden capitalize">&gt;&gt;&nbsp;</span>
+            <span className="flex items-center">
+              {!isSpa && <span>Hook up with</span>}&nbsp;
+              {profile.username}
+            </span>
           </h1>
           <div className="w-10" /> {/* Spacer for centering */}
         </div>
@@ -734,8 +738,8 @@ const generateSEOCopy = () => {
                 </h4>
 
                 <div className="flex items-start gap-2 text-neutral-600 my-4">
-                  <FiMapPin className="mt-1 flex-shrink-0" size={18} />
-                  <p className="text-base">
+                  <FiMapPin className="mt-1 flex-shrink-0 font-semibold" size={20} />
+                  <p className="text-base capitalize text-xl font-semibold">
                     {profile.location?.area?.[0] && `${profile.location.area[0]}, `}
                     {profile.location?.location}, {profile.location?.county}
                   </p>
@@ -811,8 +815,8 @@ const generateSEOCopy = () => {
               {profile?.userType === "masseuse" && (
                 <motion.div
                   className={`mt-4 p-3 rounded-lg border text-sm flex items-center gap-2 ${profile?.providesEroticServices
-                      ? "border-rose-300 bg-rose-50 text-rose-700"
-                      : "border-emerald-300 bg-emerald-50 text-emerald-700"
+                    ? "border-rose-300 bg-rose-50 text-rose-700"
+                    : "border-emerald-300 bg-emerald-50 text-emerald-700"
                     }`}
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -820,15 +824,15 @@ const generateSEOCopy = () => {
                 >
                   {profile?.providesEroticServices ? (
                     <>
-                      <FiHeart className="text-rose-500" size={40}/>
+                      <FiHeart className="text-rose-500" size={40} />
                       <span>
                         <strong>This masseuse provides erotic and sensual massage services as well.</strong>
                         &nbsp;Please communicate your preferences respectfully.
                       </span>
                     </>
                   ) : (
-                    <> 
-                      <FiUser className="text-emerald-500" size={40}/>
+                    <>
+                      <FiUser className="text-emerald-500" size={40} />
                       <span>
                         <strong>This masseuse offers professional, non-erotic massage services only.</strong>
                         &nbsp;Kindly keep all interactions respectful.
@@ -1147,7 +1151,7 @@ const generateSEOCopy = () => {
             >
               {similarProfiles.map((similarProfile) => (
                 <SwiperSlide key={similarProfile._id}>
-                  <ProfileCard profile={similarProfile} imgHght={"max-md:h-80"}/>
+                  <ProfileCard profile={similarProfile} imgHght={"max-md:h-80"} />
                 </SwiperSlide>
               ))}
             </Swiper>

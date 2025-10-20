@@ -38,9 +38,9 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
 
-            <Route path="/location/:county" element={<LocationPage />} />
-            <Route path="/location/:county/:location" element={<LocationPage />} />
-            <Route path="/location/:county/:location/:area" element={<LocationPage />} />
+            <Route path="/:county" element={<LocationPage />} />
+            <Route path="/:county/:location" element={<LocationPage />} />
+            <Route path="/:county/:location/:area" element={<LocationPage />} />
 
             <Route path="/profile/:userType/:userId" element={<ProfileDetailsPage />} />
 

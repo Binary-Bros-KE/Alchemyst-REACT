@@ -18,7 +18,7 @@ export default function PopularAreas({ county }) {
           {popularCounties.map((countyName, index) => (
             <button
               key={index}
-              onClick={() => navigate(`/location/${countyName.toLowerCase()}`)}
+              onClick={() => navigate(`/${countyName.toLowerCase()}`)}
               className="px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-all text-sm cursor-pointer"
             >
               {countyName}
@@ -42,7 +42,7 @@ export default function PopularAreas({ county }) {
         {areas.map((area, index) => (
           <button
             key={index}
-            onClick={() => navigate(`/location/${county}/${area}`)}
+            onClick={() => navigate(`/${county}/${area}`)}
             className="px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-all text-sm"
           >
             {area}

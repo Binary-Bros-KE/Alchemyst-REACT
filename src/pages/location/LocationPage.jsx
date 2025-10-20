@@ -20,7 +20,7 @@ export default function LocationPage() {
   const locationHook = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [bgImage, setBgImage] = useState('/ass.png')
+  const [bgImage, setBgImage] = useState('https://res.cloudinary.com/dowxcmeyy/image/upload/v1760969542/alchemyst-escorts_e0cdbo.png')
 
   const { county, location, area } = params
 
@@ -29,7 +29,7 @@ export default function LocationPage() {
     const countyData = locationsData.find(
       c => c.name.toLowerCase() === county?.toLowerCase()
     )
-    setBgImage(countyData?.coverImage || '/ass.png')
+    setBgImage(countyData?.coverImage || 'https://res.cloudinary.com/dowxcmeyy/image/upload/v1760969542/alchemyst-escorts_e0cdbo.png')
   }, [county])
 
   // Get data from Redux store - updated to match new structure
@@ -134,17 +134,17 @@ export default function LocationPage() {
   // Rest of your component remains the same...
   const handleLocationClick = (loc) => {
     if (loc === 'all') {
-      navigate(`/location/${county}`)
+      navigate(`/${county}`)
     } else {
-      navigate(`/location/${county}/${loc}`)
+      navigate(`/${county}/${loc}`)
     }
   }
 
   const handleAreaClick = (areaName) => {
     if (areaName === 'all') {
-      navigate(`/location/${county}/${location}`)
+      navigate(`/${county}/${location}`)
     } else {
-      navigate(`/location/${county}/${location}/${areaName}`)
+      navigate(`/${county}/${location}/${areaName}`)
     }
   }
 

@@ -162,11 +162,11 @@ export default function Home() {
 
   const handleSuggestionClick = (suggestion) => {
     if (suggestion.type === "county") {
-      navigate(`/location/${suggestion.value}`)
+      navigate(`/${suggestion.value}`)
     } else if (suggestion.type === "location") {
-      navigate(`/location/${suggestion.county}/${suggestion.value}`)
+      navigate(`/${suggestion.county}/${suggestion.value}`)
     } else {
-      navigate(`/location/${suggestion.county}?area=${suggestion.value}`)
+      navigate(`/${suggestion.county}?area=${suggestion.value}`)
     }
     setShowSuggestions(false)
     setSearchQuery("")
@@ -212,7 +212,7 @@ export default function Home() {
         county.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
       if (countyMatch) {
-        navigate(`/location/${countyMatch.name}`)
+        navigate(`/${countyMatch.name}`)
       }
     } else {
       // Search for location match within selected county
@@ -222,10 +222,10 @@ export default function Home() {
           location.toLowerCase().includes(searchQuery.toLowerCase())
         )
         if (locationMatch) {
-          navigate(`/location/${selectedCounty}/${locationMatch}`)
+          navigate(`/${selectedCounty}/${locationMatch}`)
         } else {
           // If no exact match, navigate to county with search query
-          navigate(`/location/${selectedCounty}?search=${searchQuery}`)
+          navigate(`/${selectedCounty}?search=${searchQuery}`)
         }
       }
     }
@@ -265,7 +265,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative bg-[url('/footer/lingerie-bg.png')] bg-cover bg-center py-16 px-4 max-md:py-10">
+      <div className="relative bg-[url('https://res.cloudinary.com/dowxcmeyy/image/upload/v1760970216/alchemyst-escorts-banner_tvwm7r.png')] max-md:bg-[url('https://res.cloudinary.com/dowxcmeyy/image/upload/v1760969895/alchemyst-escorts_wiitx6.jpg')] bg-cover bg-center py-16 px-4 max-md:py-10">
       <div className="absolute inset-0 bg-black/60"></div>
         <div className="relative container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4">
@@ -384,11 +384,6 @@ export default function Home() {
             </div>
           </div>
 
-          {totalProfiles > 0 && (
-            <div className="text-sm text-muted-foreground">
-              {displayedCount} of {totalProfiles} profiles
-            </div>
-          )}
         </div>
 
         {/* Error Display */}
@@ -421,9 +416,9 @@ export default function Home() {
         {spas.length > 0 && (filters.userType === 'all' || filters.userType === 'spa') && (
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-foreground">Featured Spas & Parlors</h2>
+              <h2 className="text-2xl font-bold text-foreground">Spas & Parlors</h2>
               <button
-                onClick={() => navigate(`/location/${selectedCounty}?type=spa`)}
+                onClick={() => navigate(`/${selectedCounty}?type=spa`)}
                 className="text-primary hover:text-primary/80 font-medium"
               >
                 See all →
@@ -680,7 +675,7 @@ export default function Home() {
               "@type": "SearchAction",
               "target": {
                 "@type": "EntryPoint",
-                "urlTemplate": "https://alchemyst.co.ke/location/{search_term_string}"
+                "urlTemplate": "https://alchemyst.co.ke/{search_term_string}"
               },
               "query-input": "required name=search_term_string"
             },
