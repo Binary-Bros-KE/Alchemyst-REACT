@@ -88,7 +88,7 @@ export default function Navbar() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/?userType=escort", label: "Escorts" },
-    { href: "/?serviceType=massage", label: "Massage" },
+    { href: "/?userType=masseuse", label: "Massage" },
     { href: "/?userType=of-model", label: "OF Models" }, // Changed from OFModel to of-model
     { href: "/?userType=spa", label: "Spas" },
     { href: "/blog", label: "Blog" },
@@ -156,7 +156,7 @@ export default function Navbar() {
                     </div>
                     <div className="flex flex-col text-sm text-text-primary">
                       <button onClick={() => { navigate("/dashboard"); setDropdownOpen(false); }} className="px-4 py-2 text-left hover:bg-primary cursor-pointer hover:text-white">Dashboard</button>
-                      <button onClick={() => { navigate("/settings"); setDropdownOpen(false); }} className="px-4 py-2 text-left hover:bg-primary cursor-pointer hover:text-white">Settings</button>
+                      <button onClick={() => { navigate("/dashboard#settings"); setDropdownOpen(false); }} className="px-4 py-2 text-left hover:bg-primary cursor-pointer hover:text-white">Settings</button>
                       <button onClick={handleLogout} className="px-4 py-2 text-left text-red-400 hover:bg-primary cursor-pointer rounded-b-xl hover:text-white">Logout</button>
                     </div>
                   </motion.div>

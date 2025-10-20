@@ -182,7 +182,7 @@ export default function SpaCard({ profile }) {
           {profile.location?.county}, {profile.location?.location}
         </p>
         <div className="text-xs text-blue-600/50 font-bold flex items-center gap-2 mb-2">
-          <div className="h-2 w-2 bg-blue-600/50 rounded-full"></div> {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'men' ? 'Incalls Only' : 'Outcalls Only'}
+          <div className="h-2 w-2 bg-blue-600/50 rounded-full"></div> {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'incall' ? 'Incalls Only' : 'Outcalls Only'}
         </div>
 
         {profile.bio && <p className="text-sm text-foreground/80 mb-2 line-clamp-2">{profile.bio}</p>}

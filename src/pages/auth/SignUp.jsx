@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { useNavigate, useLocation, Link } from "react-router-dom"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 import toast from "react-hot-toast"
+import { saveAuthData } from "../../utils/auth"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -72,49 +73,49 @@ function SignUpContent() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+// In your Register component, update the handleSubmit function:
+const handleSubmit = async (e) => {
+  e.preventDefault()
 
-    if (!validateForm()) {
-      toast.error("Please fix the errors in the form")
-      return
-    }
-
-    setLoading(true)
-
-    try {
-      const payload = {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-        userType: userType,
-      }
-
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.message || "Registration failed")
-
-      if (data.success) {
-        localStorage.setItem("user", JSON.stringify(data.data))
-        if (data.token) localStorage.setItem("token", data.token)
-
-        toast.success("Registration successful!")
-
-        navigate("/dashboard")
-      } else {
-        throw new Error(data.message || "Registration failed")
-      }
-    } catch (error) {
-      toast.error(error.message)
-    } finally {
-      setLoading(false)
-    }
+  if (!validateForm()) {
+    toast.error("Please fix the errors in the form")
+    return
   }
+
+  setLoading(true)
+
+  try {
+    const payload = {
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      userType: userType,
+    }
+
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+
+    const data = await response.json()
+    if (!response.ok) throw new Error(data.message || "Registration failed")
+
+    if (data.success) {
+      // Save auth data with 24-hour expiration (default for register)
+      saveAuthData(data.token, data.data, false) // false = 24 hours
+      
+      toast.success("Registration successful!")
+      navigate("/dashboard")
+    } else {
+      throw new Error(data.message || "Registration failed")
+    }
+  } catch (error) {
+    toast.error(error.message)
+  } finally {
+    setLoading(false)
+  }
+}
 
   const handleChange = (e) => {
     const { name, value } = e.target

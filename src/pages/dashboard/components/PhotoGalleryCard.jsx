@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import toast from "react-hot-toast"
 import { AiOutlineCamera, AiOutlineDelete, AiOutlineCloudUpload } from "react-icons/ai"
-import { FiX } from "react-icons/fi"
+import { FiCheckCircle, FiX } from "react-icons/fi"
 import ConfirmationModal from "../../../components/ConfirmationModal"
 
 const API_URL = import.meta.env.VITE_API_URL
@@ -23,6 +23,9 @@ export default function PhotoGalleryCard({ userData, updateUserData }) {
   const [uploading, setUploading] = useState(false)
   const [deleting, setDeleting] = useState(null)
 
+  const views = userData?.analytics?.views
+  const interactions = userData?.analytics?.interactions
+
   // safe handling of package + status
   const pkg = userData?.currentPackage ?? null;
   const pkgType = pkg?.packageType ?? null;
@@ -38,6 +41,17 @@ export default function PhotoGalleryCard({ userData, updateUserData }) {
   const BASIC_NON_SPA = 4; // interpreted as "2 extra images for basic" => 2 + 2 = 4
 
   let MAX_SECONDARY_IMAGES = DEFAULT_NON_SPA; // fallback
+
+  const Ribbon = ({ text, colorClass, icon, top }) => (
+    <div
+      className={`absolute transform -rotate-45 text-center text-white text-[8px] font-bold shadow-lg ${colorClass} ${top} w-40`}
+    >
+      <span className="inline-flex items-center gap-1.5 py-1 text-[8px] uppercase tracking-wider">
+        {icon}
+        {text}
+      </span>
+    </div>
+  );
 
   if (userData?.userType === "spa") {
     // SPA rules
@@ -282,14 +296,74 @@ export default function PhotoGalleryCard({ userData, updateUserData }) {
     }
   }
 
+  const renderBadges = () => {
+    const packageType = userData.currentPackage?.packageType;
+    const isPackageActive = userData.currentPackage?.status === 'active';
+    const isVerified = userData.verification?.profileVerified;
+
+    const badgeList = [];
+
+    // Check for package badge
+    if (packageType && isPackageActive) {
+      const packageInfo = {
+        elite: { text: "VIP", colorClass: "bg-gradient-to-r from-yellow-400 to-orange-500" },
+        premium: { text: "Premium", colorClass: "bg-gradient-to-r from-purple-500 to-pink-500" },
+        basic: { text: "Regular", colorClass: "bg-neutral-600" },
+      }[packageType];
+
+      if (packageInfo) {
+        badgeList.push(packageInfo);
+      }
+    }
+
+    // Check for verification badge
+    if (isVerified) {
+      badgeList.push({
+        text: 'Verified',
+        colorClass: 'bg-blue-500',
+        icon: <FiCheckCircle size={12} />,
+      });
+    }
+
+    if (badgeList.length === 0) return null;
+
+    // Reverse the list to ensure 'VIP' or other package badges appear on top
+    const sortedBadges = badgeList;
+
+    return (
+      <div className="absolute top-0 left-0 w-40 h-40 overflow-hidden z-10 pointer-events-none">
+        {sortedBadges.map((badge, index) => (
+          <Ribbon
+            key={badge.text}
+            text={badge.text}
+            colorClass={badge.colorClass}
+            icon={badge.icon}
+            top={index === 0 ? 'top-3 -left-15' : 'top-8 -left-12'} // Stagger the ribbons if there are multiple
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="bg-bg-secondary border border-border-light rounded-2xl p-6"
+        className="relative bg-bg-secondary border border-border-light rounded-2xl p-6"
       >
+        {renderBadges()}
+        <div className="flex my-6 gap-4">
+          <div className="flex flex-col justify-center bg-blue-500/10 border border-blue-500 text-center rounded-md px-4 py-1 w-full">
+            <span className="text-lg">Profile Views</span>
+            <span className="font-bold text-4xl text-blue-500">{views}</span>
+          </div>
+          <div className="flex flex-col justify-center bg-fuchsia-500/10 border border-fuchsia-500 text-center rounded-md px-4 py-1 w-full">
+            <span className="text-lg">Interactions</span>
+            <span className="font-bold text-4xl text-fuchsia-500">{interactions}</span>
+          </div>
+        </div>
         <div className="flex items-start justify-between mb-6">
           <div>
             <h3 className="text-xl font-bold text-text-primary mb-1">Photo Gallery</h3>

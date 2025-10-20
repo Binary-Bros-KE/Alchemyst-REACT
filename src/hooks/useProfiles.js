@@ -4,7 +4,7 @@ import { fetchAllProfiles, applyFilters } from '../redux/profilesSlice'
 import { setFilters, setSelectedCounty } from '../redux/uiSlice'
 import { useEffect, useCallback, useMemo } from 'react'
 
-const CACHE_DURATION = 10 * 60 * 1000 // 5 minutes
+const CACHE_DURATION = 60 * 60 * 1000 // 5 minutes
 
 export const useProfiles = () => {
   const dispatch = useDispatch()

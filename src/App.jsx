@@ -18,10 +18,16 @@ import ScrollToTop from "./components/BackToTop";
 import BlogsPage from './pages/blog/BlogsPage';
 import BlogDetailsPage from './pages/blog/BlogDetailsPage';
 import SnapToTop from "./components/SnapToTop"
+import { useEffect } from "react"
+import { initAuthCheck } from "./utils/auth"
 
 
 
 function App() {
+  useEffect(() => {
+    initAuthCheck(); // clears data + redirects if expired
+  }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={<div>Loading...</div>} persistor={persistor}>

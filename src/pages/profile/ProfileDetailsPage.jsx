@@ -55,6 +55,10 @@ export default function ProfileDetailsPage() {
     profileCache[params.userId]?.profile ||
     allProfiles.find(p => p._id === params.userId)
 
+  useEffect(() => {
+    trackView()
+  }, []);
+
   // Enhanced useEffect for params changes
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -69,7 +73,6 @@ export default function ProfileDetailsPage() {
       }))
     }
 
-    trackView()
   }, [params.userType, params.userId, dispatch, profileCache, allProfiles])
 
   // Enhanced similar profiles logic
@@ -669,7 +672,7 @@ export default function ProfileDetailsPage() {
                   </div>
                   <div className="flex items-center gap-2 text-xl">
                     Service Type: <div className="h-3 w-3  bg-blue-500 rounded-full"></div>
-                    <h4 className="text-xl text-blue-500 font-bold">{profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'men' ? 'Incalls Only' : 'Outcalls Only'}</h4>
+                    <h4 className="text-xl text-blue-500 font-bold">{profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'incall' ? 'Incalls Only' : 'Outcalls Only'}</h4>
                   </div>
                 </div>
               </div>
@@ -786,7 +789,7 @@ export default function ProfileDetailsPage() {
                     )}
                     {profile.breastSize && (
                       <div>
-                        <p className="text-sm text-neutral-500 mb-1">Bus</p>
+                        <p className="text-sm text-neutral-500 mb-1">Bust</p>
                         <p className="font-semibold text-neutral-900 uppercase">{profile.breastSize}</p>
                       </div>
                     )}
@@ -803,7 +806,7 @@ export default function ProfileDetailsPage() {
                       <div>
                         <p className="text-sm text-neutral-500 mb-1">Service Type</p>
                         <p className="font-semibold text-neutral-900 capitalize">
-                          {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'men' ? 'Incalls Only' : 'Outcalls Only'}
+                          {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'incall' ? 'Incalls Only' : 'Outcalls Only'}
                         </p>
                       </div>
                     )}
@@ -902,8 +905,11 @@ export default function ProfileDetailsPage() {
               </div>
             )}
 
-
-            <p className="my-2">To hook up with <span className={`font-bold capitalize ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>{profile.username}</span> get in touch via the contact details below to arrange a meet-up.</p>
+            {isSpa ?
+              <p className="my-2">For More Info about <span className={`font-bold capitalize ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>{profile.username}</span> get in touch via the contact details below to arrange a meet-up.</p>
+              :
+              <p className="my-2">To hook up with <span className={`font-bold capitalize ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>{profile.username}</span> get in touch via the contact details below to arrange a meet-up.</p>
+            }
 
             {/* Phone Number with Copy */}
             {profile.contact?.phoneNumber && (

@@ -13,6 +13,7 @@ import PhotoGalleryCard from "./components/PhotoGalleryCard"
 import PackageCard from "./components/PackageCard"
 import LocationCard from "./components/LocationCard"
 import WalletBalanceCard from "./components/WalletBalanceCard"
+import SettingsCard from "./components/SettingsCard.JSX"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -48,21 +49,32 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    const storedUserData = localStorage.getItem("user")
-    const token = localStorage.getItem("token")
+    let storedUserData = null;
 
-    if (!storedUserData || !token) {
-      navigate("/login")
-      return
+    try {
+      const rawUser = localStorage.getItem("user");
+      storedUserData = rawUser && rawUser !== "undefined" ? JSON.parse(rawUser) : null;
+    } catch (error) {
+      console.error("Failed to parse user data:", error);
+      storedUserData = null;
     }
 
-    const user = JSON.parse(storedUserData)
+    const token = localStorage.getItem("token");
 
-    setUserData(user)
-    setLoading(false)
+    console.log("storedUserData", storedUserData);
+    console.log("token", token);
+    console.log("redirect condition:", !storedUserData || !token);
 
-    fetchUserProfile()
-  }, [navigate])
+    if (!storedUserData || !token) {
+      localStorage.clear(); // clear bad data
+      navigate("/login");
+      return;
+    }
+
+    setUserData(storedUserData);
+    setLoading(false);
+    fetchUserProfile();
+  }, [navigate]);
 
   const updateUserData = (newData) => {
     const updatedUser = { ...userData, ...newData }
@@ -79,13 +91,13 @@ export default function Dashboard() {
       reasons.push("Email not verified")
     }
 
-if (
-  !userData.currentPackage ||
-  !userData.currentPackage.packageType ||
-  userData.currentPackage.status !== 'active'
-) {
-  reasons.push("No active subscription package")
-}
+    if (
+      !userData.currentPackage ||
+      !userData.currentPackage.packageType ||
+      userData.currentPackage.status !== 'active'
+    ) {
+      reasons.push("No active subscription package")
+    }
 
 
     if (isSpa) {
@@ -219,6 +231,8 @@ if (
             <ServicesCard userData={userData} updateUserData={updateUserData} />
 
             <ProfileVerificationCard userData={userData} updateUserData={updateUserData} />
+
+            <SettingsCard userData={userData} updateUserData={updateUserData} />
           </div>
         </div>
       </div>

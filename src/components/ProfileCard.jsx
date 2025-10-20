@@ -176,13 +176,19 @@ export default function ProfileCard({ profile, imgHght }) {
       <div className="bg-white p-3 space-y-2 max-md:p-2">
         <h3 className={`font-bold capitalize truncate text-md ${profile.userType === "masseuse" ? "text-blue-500" : profile.userType === "of-model" ? "text-fuchsia-500" : "text-primary"}`}>
           {profile.username} ({profile.age} yrs)
-          </h3>
+        </h3>
         <p className="text-md text-muted-foreground truncate flex items-center gap-1">
           <BiLocationPlus size={12} />
           {profile.location?.county}, {profile.location?.location}
         </p>
-        <div className="text-xs text-blue-500/50 font-bold flex items-center gap-2">
-          <div className="h-2 w-2 bg-blue-500/50 rounded-full"></div> {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'incall' ? 'Incalls Only' : 'Outcalls Only'}
+        <div className="flex items-center justify-between">
+          <div className="text-xs text-blue-500/50 font-bold flex items-center gap-2">
+            <div className="h-2 w-2 bg-blue-500/50 rounded-full"></div>
+            {profile.serviceType === 'both' ? 'Incalls & Outcalls' : profile.serviceType === 'incall' ? 'Incalls Only' : 'Outcalls Only'}
+          </div>
+          <div className={`capitalize font-semibold rounded-sm w-fit text-sm px-2 text ${profile.userType === "masseuse" ? "text-blue-500 bg-blue-400/20" : profile.userType === "of-model" ? "text-fuchsia-500 bg-fuchsia-400/20" : "text-primary bg-primary/20"}`}>
+            {profile.gender}
+          </div>
         </div>
 
         {profile.contact?.phoneNumber && (
