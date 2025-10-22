@@ -13,7 +13,7 @@ import PhotoGalleryCard from "./components/PhotoGalleryCard"
 import PackageCard from "./components/PackageCard"
 import LocationCard from "./components/LocationCard"
 import WalletBalanceCard from "./components/WalletBalanceCard"
-import SettingsCard from "./components/SettingsCard.JSX"
+import SettingsCard from "./components/SettingsCard.jsx"
 
 const API_URL = import.meta.env.VITE_API_URL
 
