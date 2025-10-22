@@ -1,5 +1,3 @@
-"use client"
-
 import { FiHeart, FiUser, FiCamera, FiHome } from "react-icons/fi"
 
 const categories = [

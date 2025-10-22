@@ -40,10 +40,13 @@ export default function FilterBar({ filters, onFilterChange }) {
   const handleFilterChange = (key, value) => {
     // Mark that filters have been changed but don't apply immediately
     setShowApplyButton(true)
-    // Update the filters in state but don't trigger the actual filtering yet
-    onFilterChange({ ...filters, [key]: value }, false)
-  }
 
+    // FIX: Create new filters object to prevent mutations
+    const newFilters = { ...filters, [key]: value }
+
+    // Update the filters in state but don't trigger the actual filtering yet
+    onFilterChange(newFilters, false)
+  }
   const handleApplyFilters = () => {
     // Apply the filters and scroll to results
     onFilterChange(filters, true)
@@ -59,32 +62,32 @@ export default function FilterBar({ filters, onFilterChange }) {
   }
 
   const handleAgeChange = (type, value) => {
-  const newAgeRange = { ...filters.ageRange }
-  
-  if (type === 'min') {
-    // Ensure minimum age is at least 18
-    const minValue = Math.max(18, parseInt(value) || 18)
-    newAgeRange.min = minValue
-    
-    // Only adjust max if it exists AND is less than the new min
-    if (newAgeRange.max !== null && newAgeRange.max < minValue) {
-      newAgeRange.max = minValue
-    }
-  } else {
-    // For max age
-    const maxValue = value === '' ? null : parseInt(value)
-    
-    if (maxValue === null) {
-      newAgeRange.max = null
+    const newAgeRange = { ...filters.ageRange }
+
+    if (type === 'min') {
+      // Ensure minimum age is at least 18
+      const minValue = Math.max(18, parseInt(value) || 18)
+      newAgeRange.min = minValue
+
+      // Only adjust max if it exists AND is less than the new min
+      if (newAgeRange.max !== null && newAgeRange.max < minValue) {
+        newAgeRange.max = minValue
+      }
     } else {
-      // Ensure max is at least 18 and at least equal to min
-      newAgeRange.max = Math.max(newAgeRange.min || 18, maxValue)
+      // For max age
+      const maxValue = value === '' ? null : parseInt(value)
+
+      if (maxValue === null) {
+        newAgeRange.max = null
+      } else {
+        // Ensure max is at least 18 and at least equal to min
+        newAgeRange.max = Math.max(newAgeRange.min || 18, maxValue)
+      }
     }
+
+    setShowApplyButton(true)
+    onFilterChange({ ...filters, ageRange: newAgeRange }, false)
   }
-  
-  setShowApplyButton(true)
-  onFilterChange({ ...filters, ageRange: newAgeRange }, false)
-}
   const clearFilters = () => {
     onFilterChange({
       userType: "all",

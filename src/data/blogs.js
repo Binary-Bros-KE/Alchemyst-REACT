@@ -4,6 +4,7 @@ export const BLOG_CATEGORIES = [
     "BDSM",
     "Sex Toys",
     "Sex Ed",
+    "Escorts",
     "Industry News"
 ];
 
@@ -16,8 +17,10 @@ export const BLOG_LAYOUTS = {
 };
 
 export const blogs = [
+
+
     {
-        id: '1',
+        id: 'my-first-time-as-an-esscort-a-confessional',
         title: 'My First Time as an Escort: A Confessional',
         excerpt: 'A raw and honest account of my first night working as an escort in Nairobi...',
         content: `
@@ -56,14 +59,18 @@ If you're curious about dipping your toes in, like I did, check out Alchemyst. I
         featured: true,
         tags: ['first-time', 'escort confessions', 'nairobi', 'personal-story',]
     },
+
+
+
+
     {
-        id: '2',
+        id: 'top-10-sex-positions-you-need-to-try-tonight',
         title: 'Top 10 Sex Positions You Need to Try Tonight',
         excerpt: 'Spice up your bedroom routine with these incredible sex positions that will take your sex experiences to the next level...',
         category: 'Sex Ed',
         layout: BLOG_LAYOUTS.TOP_TEN,
         coverImage: 'https://res.cloudinary.com/dowxcmeyy/image/upload/v1760724282/Top-10-Sex-Positions-You-Need-to-Try-Tonight_eynflc.jpg',
-        author: 'Dr. Sarah Chen',
+        author: 'Alchemy',
         publishDate: '2024-01-12',
         readTime: '12 min read',
         featured: true,
@@ -181,6 +188,160 @@ If you're curious about dipping your toes in, like I did, check out Alchemyst. I
             },
         ]
     },
+
+
+      {
+        id: 'unlocking-ecstasy-essential-escort-services-in-kenya-you-must-experience',
+        title: 'Unlocking Ecstasy: Essential Escort Services in Kenya You Must Experience',
+        excerpt: 'A tantalizing array of services offered by professional escorts in Kenya, designed to fulfill your deepest desires with discretion, passion, and unparalleled satisfaction...',
+        intro:  "Whether you're a local looking to unwind or a traveler craving adventure, platforms like Alchemyst.co.ke connect you with verified professionals who prioritize safety, consent, and explosive pleasure. From sensual massages to wild role plays, we'll explore 18 must-try services with explicit breakdowns, so you know exactly what to expect when you book. Remember, communication is key—discuss boundaries upfront for sessions that leave you breathless and begging for more.",
+        category: 'Escorts',
+        layout: BLOG_LAYOUTS.TOP_TEN,
+        coverImage: 'https://res.cloudinary.com/dowxcmeyy/image/upload/v1761132234/unlocking-ecstasy-essential-escort-services-in-kenya-you-must-experience_1_lj9ae8.jpg',
+        author: 'Alchemy',
+        publishDate: '2024-01-12',
+        readTime: '12 min read',
+        featured: true,
+        sections: [
+            {
+                title: 'Massage',
+                description: "Indulge in a full-body oil rubdown that starts innocent but escalates into erotic bliss. Your escort's skilled hands glide over your skin, kneading tense muscles before focusing on erogenous zones—teasing your inner thighs, circling your cock or clit with firm strokes.",
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    'Request hot stones for deeper relaxation before the climax.',
+                    'Combine with aromatherapy oils to heighten sensory arousal.',
+                    'Extend to a mutual massage for reciprocal touching and tension release.'
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+            {
+                title: '',
+                description: '',
+                image: '',
+                imagePosition: 'left',
+                tips: [
+                    '',
+                    '',
+                    ''
+                ]
+            },
+       ]
+    },
+
+
+
+
+
     {
         id: '3',
         title: 'Top 5 Luxury Spas in Westlands for Ultimate Relaxation',

@@ -24,6 +24,7 @@ export const useProfiles = () => {
   const { filters, selectedCounty } = useSelector(state => state.ui)
 
   // Read URL parameters and apply filters on mount
+  // Read URL parameters and apply filters on mount
   useEffect(() => {
     const urlFilters = {
       // Reset to defaults first
@@ -45,10 +46,10 @@ export const useProfiles = () => {
       urlFilters.userType = userType
     }
 
-    // Read serviceType from URL (e.g., ?serviceType=massage)
-    const serviceType = searchParams.get('serviceType')
-    if (serviceType) {
-      urlFilters.specificService = serviceType
+    // FIX: Read specificService from URL (NOT serviceType)
+    const specificService = searchParams.get('specificService')
+    if (specificService) {
+      urlFilters.specificService = specificService
     }
 
     // Always apply the filters (either from URL or defaults)
@@ -71,7 +72,7 @@ export const useProfiles = () => {
     )
   }, [filters])
 
-    // Add this shuffle function at the top
+  // Add this shuffle function at the top
   const shuffleArray = (array) => {
     const shuffled = [...array]
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -135,8 +136,9 @@ export const useProfiles = () => {
       newSearchParams.set('userType', newFilters.userType)
     }
 
-    if (newFilters.serviceType && newFilters.serviceType !== 'all') {
-      newSearchParams.set('serviceType', newFilters.serviceType)
+    // FIX: Only add specificService to URL, not serviceType
+    if (newFilters.specificService && newFilters.specificService !== 'all') {
+      newSearchParams.set('specificService', newFilters.specificService)
     }
 
     setSearchParams(newSearchParams)

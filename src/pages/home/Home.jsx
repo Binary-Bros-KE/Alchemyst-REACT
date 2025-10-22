@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { FiSearch, FiMapPin, FiRefreshCw } from "react-icons/fi"
 
-
 import { useProfiles } from "../../hooks/useProfiles"
 import locationsData from "../../data/counties.json"
 import ProfileCard from "../../components/ProfileCard"
@@ -15,6 +14,7 @@ import PopularAreas from "./components/PopularAreas"
 import FilterBar from "../../components/FilterBar"
 import { GiCurlyMask, GiDualityMask } from "react-icons/gi"
 import { LuSearchCheck } from "react-icons/lu"
+import { generateSeoPath } from "../../utils/urlHelpers"
 
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation, Autoplay, FreeMode } from "swiper/modules"
@@ -160,13 +160,23 @@ export default function Home() {
     setShowSuggestions(uniqueMatches.length > 0)
   }
 
-  const handleSuggestionClick = (suggestion) => {
+ const handleSuggestionClick = (suggestion) => {
     if (suggestion.type === "county") {
-      navigate(`/${suggestion.value}`)
+      const path = generateSeoPath({ county: suggestion.value })
+      navigate(path)
     } else if (suggestion.type === "location") {
-      navigate(`/${suggestion.county}/${suggestion.value}`)
-    } else {
-      navigate(`/${suggestion.county}?area=${suggestion.value}`)
+      const path = generateSeoPath({ 
+        county: suggestion.county, 
+        location: suggestion.value 
+      })
+      navigate(path)
+    } else if (suggestion.type === "area") {
+      const path = generateSeoPath({ 
+        county: suggestion.county, 
+        location: suggestion.location,
+        area: suggestion.value 
+      })
+      navigate(path)
     }
     setShowSuggestions(false)
     setSearchQuery("")
@@ -199,33 +209,34 @@ export default function Home() {
   const handleSearchSubmit = () => {
     if (!searchQuery.trim()) return
 
-    // If we have suggestions, use the first one
     if (suggestions.length > 0) {
       handleSuggestionClick(suggestions[0])
       return
     }
 
-    // Otherwise, try to find the best match
     if (selectedCounty === "all") {
-      // Search for county match
       const countyMatch = locationsData.find(county =>
         county.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
       if (countyMatch) {
-        navigate(`/${countyMatch.name}`)
+        const path = generateSeoPath({ county: countyMatch.name })
+        navigate(path)
       }
     } else {
-      // Search for location match within selected county
       const county = locationsData.find((c) => c.name === selectedCounty)
       if (county) {
-        const locationMatch = county.sub_counties.find(location =>
-          location.toLowerCase().includes(searchQuery.toLowerCase())
+        const locationMatch = county.sub_counties.find(loc =>
+          loc.toLowerCase().includes(searchQuery.toLowerCase())
         )
         if (locationMatch) {
-          navigate(`/${selectedCounty}/${locationMatch}`)
+          const path = generateSeoPath({ 
+            county: selectedCounty, 
+            location: locationMatch 
+          })
+          navigate(path)
         } else {
-          // If no exact match, navigate to county with search query
-          navigate(`/${selectedCounty}?search=${searchQuery}`)
+          const path = generateSeoPath({ county: selectedCounty })
+          navigate(`${path}?search=${searchQuery}`)
         }
       }
     }
@@ -266,7 +277,7 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div className="relative bg-[url('https://res.cloudinary.com/dowxcmeyy/image/upload/v1760970216/alchemyst-escorts-banner_tvwm7r.png')] max-md:bg-[url('https://res.cloudinary.com/dowxcmeyy/image/upload/v1760969895/alchemyst-escorts_wiitx6.jpg')] bg-cover bg-center py-16 px-4 max-md:py-10">
-      <div className="absolute inset-0 bg-black/60"></div>
+        <div className="absolute inset-0 bg-black/60"></div>
         <div className="relative container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4">
             <h1 className="text-4xl md:text-5xl font-bold text-text-inverse mb-4 max-md:flex max-md:flex-col">
@@ -343,7 +354,6 @@ export default function Home() {
 
               <button
                 onClick={handleSearchSubmit}
-                // disabled={!searchQuery.trim()}
                 className="px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FiSearch />
@@ -411,30 +421,45 @@ export default function Home() {
 
 
         {/* Spas Section */}
-        {console.log(filters.userType === 'all' || filters.userType === 'spa')}
-        {/* Spas Section */}
         {spas.length > 0 && (filters.userType === 'all' || filters.userType === 'spa') && (
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-foreground">Spas & Parlors</h2>
-              <button
-                onClick={() => navigate(`/${selectedCounty}?type=spa`)}
-                className="text-primary hover:text-primary/80 font-medium"
-              >
-                See all →
-              </button>
+              <h2 className="text-2xl font-bold text-foreground">
+                Spas & Parlors
+                {filters.userType === 'spa' && (
+                  <span className="text-lg text-muted-foreground font-normal ml-2">
+                    ({spas.length} {spas.length === 1 ? 'spa' : 'spas'})
+                  </span>
+                )}
+              </h2>
+              {filters.userType === 'all' && spas.length > 3 && (
+                <button
+                  onClick={() => {
+                    updateFilters({ ...filters, userType: 'spa' })
+                    setTimeout(() => {
+                      const resultsSection = document.getElementById('profiles-results')
+                      if (resultsSection) {
+                        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                      }
+                    }, 100)
+                  }}
+                  className="text-primary hover:text-primary/80 font-medium cursor-pointer"
+                >
+                  See all →
+                </button>
+              )}
             </div>
 
-            {/* Show carousel when no spa-relevant filters, grid when filters active */}
-            {hasSpaFilters() ? (
-              // Grid view when filters are active
+            {/* Show grid when spa category is selected OR when filters are active */}
+            {(filters.userType === 'spa' || hasSpaFilters()) ? (
+              // Grid view when spa category selected or filters active
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {spas.map((spa) => (
                   <SpaCard key={spa._id} profile={spa} />
                 ))}
               </div>
             ) : (
-              // Carousel view when no filters
+              // Carousel view only when "All" is selected and no filters
               <Swiper
                 modules={[Navigation, Autoplay, FreeMode]}
                 spaceBetween={20}
@@ -455,7 +480,7 @@ export default function Home() {
                 }}
                 className="spas-carousel"
               >
-                {spas.map((spa) => (
+                {spas.slice(0, 10).map((spa) => (
                   <SwiperSlide key={spa._id}>
                     <SpaCard profile={spa} />
                   </SwiperSlide>
@@ -468,11 +493,6 @@ export default function Home() {
         <div>
           <h2 className="text-2xl font-bold text-foreground mb-6">
             {getProfilesTitle()}
-            {profiles.length > 0 && (
-              <span className="text-lg text-muted-foreground font-normal ml-2">
-                ({profiles.length} {profiles.length === 1 ? 'profile' : 'profiles'})
-              </span>
-            )}
           </h2>
 
           {loading ? (

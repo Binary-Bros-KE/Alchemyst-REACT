@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { FiSearch, FiFilter, FiGrid, FiList, FiChevronDown } from "react-icons/fi";
 import { BlogCard } from "./components/BlogCard";
 import { blogs, BLOG_CATEGORIES } from "../../data/blogs";
+import { FaTelegramPlane } from "react-icons/fa";
 
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest First' },
@@ -66,10 +67,10 @@ export default function BlogsPage() {
         <div className="relative mx-auto px-4  max-w-7xl z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-             Let's Talk Sex
+              Let's Talk Sex
             </h1>
             <p className="text-xl text-blue-100 mb-8">
-              Discover stories, tips, and insights about dating, relationships, and adult entertainment in Kenya
+              "Some of the best moments in life are the ones you can't tell anyone about." — Sarah Nader
             </p>
 
             {/* Search Bar */}
@@ -111,8 +112,8 @@ export default function BlogsPage() {
                   <button
                     onClick={() => setSelectedCategory("all")}
                     className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${selectedCategory === "all"
-                        ? "bg-primary text-white"
-                        : "text-gray-700 hover:bg-gray-100"
+                      ? "bg-primary text-white"
+                      : "text-gray-700 hover:bg-gray-100"
                       }`}
                   >
                     All Categories
@@ -122,8 +123,8 @@ export default function BlogsPage() {
                       key={category}
                       onClick={() => setSelectedCategory(category)}
                       className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${selectedCategory === category
-                          ? "bg-primary text-white"
-                          : "text-gray-700 hover:bg-gray-100"
+                        ? "bg-primary text-white"
+                        : "text-gray-700 hover:bg-gray-100"
                         }`}
                     >
                       {category}
@@ -141,8 +142,8 @@ export default function BlogsPage() {
                       key={option.value}
                       onClick={() => setSortBy(option.value)}
                       className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${sortBy === option.value
-                          ? "bg-primary text-white"
-                          : "text-gray-700 hover:bg-gray-100"
+                        ? "bg-primary text-white"
+                        : "text-gray-700 hover:bg-gray-100"
                         }`}
                     >
                       {option.label}
@@ -155,17 +156,16 @@ export default function BlogsPage() {
               <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-6 text-white">
                 <h3 className="font-bold mb-2">Stay Updated</h3>
                 <p className="text-blue-100 text-sm mb-4">
-                  Get the latest articles and dating tips delivered to your inbox.
+                  Sex Tips, Sex styles, Porn Videos, leaks, escorts, massuses, spas and models.
                 </p>
                 <div className="space-y-3">
-                  <input
-                    type="email"
-                    placeholder="Your email address"
-                    className="w-full px-3 py-2 rounded-lg bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white"
-                  />
-                  <button className="w-full bg-white text-blue-600 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors">
-                    Subscribe
-                  </button>
+                  <a
+                    href="https://t.me/alchemyst_ke"
+                    className="w-full bg-white text-blue-600 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors flex items-center gap-2 justify-center "
+                  >
+                    <FaTelegramPlane />
+                    Join Telegram Channel
+                  </a>
                 </div>
               </div>
             </div>
@@ -190,8 +190,8 @@ export default function BlogsPage() {
                   <button
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded ${viewMode === "grid"
-                        ? "bg-primary text-white"
-                        : "text-gray-600 hover:text-gray-900"
+                      ? "bg-primary text-white"
+                      : "text-gray-600 hover:text-gray-900"
                       }`}
                   >
                     <FiGrid size={18} />
@@ -199,8 +199,8 @@ export default function BlogsPage() {
                   <button
                     onClick={() => setViewMode("list")}
                     className={`p-2 rounded ${viewMode === "list"
-                        ? "bg-primary text-white"
-                        : "text-gray-600 hover:text-gray-900"
+                      ? "bg-primary text-white"
+                      : "text-gray-600 hover:text-gray-900"
                       }`}
                   >
                     <FiList size={18} />

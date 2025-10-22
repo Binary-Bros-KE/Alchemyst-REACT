@@ -12,6 +12,7 @@ import { LuLeaf, LuSearchCheck, LuSpade } from "react-icons/lu"
 import { CgGirl } from "react-icons/cg"
 import { GiCurlyMask, GiDualityMask, GiSelfLove } from "react-icons/gi"
 import locationsData from "../../data/counties.json"
+import { generateSeoPath, urlToArea, urlToCounty, urlToLocation } from "../../utils/urlHelpers"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -22,7 +23,15 @@ export default function LocationPage() {
   const dispatch = useDispatch()
   const [bgImage, setBgImage] = useState('https://res.cloudinary.com/dowxcmeyy/image/upload/v1760969542/alchemyst-escorts_e0cdbo.png')
 
-  const { county, location, area } = params
+  // ✅ Smart parsing - no manual mappings needed!
+  const county = urlToCounty(params.county)
+  const location = params.location ? urlToLocation(params.location) : null
+  const area = params.area ? urlToArea(params.area) : null
+
+  console.log('📍 Parsed URL:', { 
+    raw: params, 
+    parsed: { county, location, area } 
+  })
 
   // Update background image based on county
   useEffect(() => {
@@ -134,17 +143,21 @@ export default function LocationPage() {
   // Rest of your component remains the same...
   const handleLocationClick = (loc) => {
     if (loc === 'all') {
-      navigate(`/${county}`)
+      const path = generateSeoPath({ county })
+      navigate(path)
     } else {
-      navigate(`/${county}/${loc}`)
+      const path = generateSeoPath({ county, location: loc })
+      navigate(path)
     }
   }
 
   const handleAreaClick = (areaName) => {
     if (areaName === 'all') {
-      navigate(`/${county}/${location}`)
+      const path = generateSeoPath({ county, location })
+      navigate(path)
     } else {
-      navigate(`/${county}/${location}/${areaName}`)
+      const path = generateSeoPath({ county, location, area: areaName })
+      navigate(path)
     }
   }
 
@@ -267,7 +280,7 @@ export default function LocationPage() {
               {location && (
                 <button
                   onClick={() => handleLocationClick('all')}
-                  className="px-4 py-1 text-sm rounded-full border border-border bg-white text-foreground hover:bg-gray-50 transition-all"
+                  className="px-4 py-1 text-sm rounded-full border border-border bg-white text-foreground hover:bg-gray-50 transition-all cursor-pointer"
                 >
                   All Locations
                 </button>

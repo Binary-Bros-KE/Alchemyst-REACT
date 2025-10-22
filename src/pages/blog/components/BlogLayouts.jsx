@@ -20,6 +20,9 @@ export const ConfessionLayout = ({ blog }) => {
 export const TopTenLayout = ({ blog }) => {
   return (
     <article className="max-w-4xl mx-auto">
+      <div className='py-4'>
+        {blog.intro}
+      </div>
       {blog.sections?.map((section, index) => (
         <div key={index} className="mb-16">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">

@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiCalendar, FiUser, FiClock, FiShare2 } from "react-icons/fi";
 import { blogs } from "../../data/blogs";
 import { BlogLayout } from "./components/BlogLayouts";
+import { BlogCard } from "./components/BlogCard";
 
 export default function BlogDetailsPage() {
     const { id } = useParams();
@@ -48,9 +49,9 @@ export default function BlogDetailsPage() {
                 <img
                     src={blog.coverImage}
                     alt={blog.title}
-                    className="w-full h-64 md:h-96 object-cover opacity-60"
+                    className="w-full h-64 md:h-96 object-cover opacity-60 max-md:min-h-110"
                 />
-                <div className="max-w-4xl mx-auto cursor-pointer">
+                <div className="max-w-4xl mx-auto cursor-pointer max-md:mx-3">
                     <button
                         onClick={() => navigate('/blog')}
                         className="flex items-center gap-2 text-blue-100 hover:text-white transition-colors mb-6 absolute top-0 mt-5 cursor-pointer"
@@ -84,11 +85,11 @@ export default function BlogDetailsPage() {
                             </div>
                         </div>
 
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+                        <h1 className="text-xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
                             {blog.title}
                         </h1>
 
-                        <p className="text-xl text-blue-100 max-w-3xl">
+                        <p className="text-sm md:text-lg text-blue-100 max-w-3xl">
                             {blog.excerpt}
                         </p>
                     </div>

@@ -202,6 +202,8 @@
             "Gatundu north",
             "Gatundu south",
             "Githunguri",
+            "Kiambu Town",
+            "Thindigua",
             "Juja",
             "Kabete",
             "Kiambaa",
@@ -391,6 +393,8 @@
         "coverImage": "",
         "code": 12,
         "sub_counties": [
+            "Makutano",
+            "Meru Town",
             "Buuri",
             "Igembe central",
             "Igembe north",
